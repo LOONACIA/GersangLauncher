@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GersangLauncher", "GersangLauncher\GersangLauncher.csproj", "{A6C45BA7-441F-45E5-9416-290802C6F1FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AB9B84DB-2885-49DD-8700-5E9C02FCE6F1}
+	EndGlobalSection
+EndGlobal
