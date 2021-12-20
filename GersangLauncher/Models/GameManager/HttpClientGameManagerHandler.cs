@@ -126,9 +126,8 @@ namespace GersangLauncher.Models.GameManager
 
 		private async Task ExecuteStarter()
 		{
-			if (_websocketService is not null && !_websocketService.IsDisConnected)
+			if (_websocketService.IsDisConnected)
 			{
-				await _websocketService.DisconnectAsync();
 				return;
 			}
 			else if (_websocketService is null)

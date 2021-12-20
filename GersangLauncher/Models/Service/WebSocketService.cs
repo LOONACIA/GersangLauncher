@@ -11,13 +11,7 @@ namespace GersangLauncher.Models.Service
 		private ClientWebSocket _ws = new ClientWebSocket();
 		private CancellationTokenSource _cts = new CancellationTokenSource();
 		private int _chunckSize = 64 * 1024;
-		public bool IsDisConnected
-		{
-			get
-			{
-				return _ws is null || _ws.State != WebSocketState.Open;
-			}
-		}
+		public bool IsDisConnected { get; private set; }
 
 		public event EventHandler OnOpen;
 		public event EventHandler<WebSocketOnMessageArgs> OnMessage;
@@ -33,6 +27,7 @@ namespace GersangLauncher.Models.Service
 			}
 			_ws = new ClientWebSocket();
 			_cts = new CancellationTokenSource();
+			IsDisConnected = false;
 			var uri = new Uri(url);
 			await _ws.ConnectAsync(uri, _cts.Token);
 			await Task.Factory.StartNew(Receive, _cts.Token);
@@ -48,6 +43,7 @@ namespace GersangLauncher.Models.Service
 				await _ws.CloseOutputAsync(WebSocketCloseStatus.Empty, "", CancellationToken.None);
 				await _ws.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, CancellationToken.None);
 			}
+			IsDisConnected = true;
 			_ws.Dispose();
 			_cts.Dispose();
 		}
@@ -72,6 +68,7 @@ namespace GersangLauncher.Models.Service
 				}
 				if (result.MessageType == WebSocketMessageType.Close)
 				{
+					await DisconnectAsync();
 					break;
 				}
 			}
