@@ -25,9 +25,12 @@ namespace GersangLauncher.Models.Service
 				CookieContainer = _cookieContainer,
 				AllowAutoRedirect = true,
 			};
-			_handler.ServerCertificateCustomValidationCallback += (sender, certificate, chain, errors) => true;
-			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 			_client = new HttpClient(_handler);
+		}
+
+		public void SetCookie(string url, string name, string value)
+		{
+			_cookieContainer.Add(new Uri(url), new Cookie(name, value));
 		}
 
 		public void SetReferrer(string referer) => _client.DefaultRequestHeaders.Referrer = new Uri(HttpUtility.UrlDecode(referer));
