@@ -132,8 +132,8 @@
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 2;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 23.10345F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 76.89655F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.61074F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.38926F));
 			this.tableLayoutPanel2.Controls.Add(this.LabelInformation, 0, 0);
 			this.tableLayoutPanel2.Controls.Add(this.label3, 0, 1);
 			this.tableLayoutPanel2.Controls.Add(this.linkLabel2, 1, 1);
@@ -167,21 +167,23 @@
 			this.label3.Location = new System.Drawing.Point(3, 90);
 			this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(62, 30);
+			this.label3.Size = new System.Drawing.Size(118, 15);
 			this.label3.TabIndex = 7;
-			this.label3.Text = "버그 제보\r\n기능 건의\r\n";
+			this.label3.Text = "버그 제보/기능 건의";
 			this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// linkLabel2
 			// 
 			this.linkLabel2.AutoSize = true;
-			this.linkLabel2.Location = new System.Drawing.Point(71, 90);
+			this.linkLabel2.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.linkLabel2.Location = new System.Drawing.Point(127, 90);
 			this.linkLabel2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
 			this.linkLabel2.Name = "linkLabel2";
-			this.linkLabel2.Size = new System.Drawing.Size(222, 30);
+			this.linkLabel2.Size = new System.Drawing.Size(168, 15);
 			this.linkLabel2.TabIndex = 8;
 			this.linkLabel2.TabStop = true;
-			this.linkLabel2.Text = "https://github.com/LOONACIA/GersangLauncher/issues";
+			this.linkLabel2.Text = "https://loonacia.tistory.com";
+			this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
 			// 
 			// FormInformation
@@ -190,7 +192,11 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.ClientSize = new System.Drawing.Size(304, 421);
 			this.Controls.Add(this.tableLayoutPanel1);
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.MinimizeBox = false;
 			this.Name = "FormInformation";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "프로그램 정보";
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.tableLayoutPanel1.PerformLayout();

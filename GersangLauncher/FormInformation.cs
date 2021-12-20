@@ -11,7 +11,7 @@ namespace GersangLauncher
 			LabelVersion.Text = $"거상 런처 v{version.Major}.{version.Minor}.{version.Build}";
 			TextBoxLicense.BackColor = this.BackColor;
 			TextBoxLicense.Text =
-"MIT License" + "\r\n\r\n" +
+"MIT LICENSE" + "\r\n\r\n" +
 "Copyright (c) 2021 LOONACIA" + "\r\n\r\n" +
 "Permission is hereby granted, free of charge, to any person obtaining a copy " +
 "of this software and associated documentation files(the \"Software\"), to deal " +
