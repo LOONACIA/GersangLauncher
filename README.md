@@ -4,7 +4,7 @@
   
 프로그램 사용으로 인한 책임은 전적으로 프로그램 사용자에게 있습니다.  
   
-홈페이지 개편으로 인해 급하게 만든 초기 버전이라 상태가 매우 불안정하며, 오류가 자주 발생할 수 있습니다. 오류 제보는 [이슈 트래커](https://github.com/LOONACIA/GersangLauncher/issues)에서 받습니다. 소스 코드는 추후 공개 예정입니다.
+버그 제보 및 기능 건의는 [이슈 트래커](https://github.com/LOONACIA/GersangLauncher/issues)와 [블로그](https://loonacia.tistory.com/)에서 받습니다.  
   
   
 ## 사용 방법  
