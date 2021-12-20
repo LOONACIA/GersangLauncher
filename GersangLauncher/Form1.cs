@@ -97,26 +97,37 @@ namespace GersangLauncher
 		private async void AccountInfoUserControl_LogInBtnClickedAsync(object? sender, AccountInfo e)
 		{
 			AccountInfo accountInfo = e;
-			try
+			int count = 3;
+			while (true)
 			{
-				var loginResult = await _gameManager.LogIn(accountInfo, x => CryptoFactory.Unprotect(x, _entropy));
-				if (loginResult)
+				try
 				{
-					var index = GetIndexOfAccountInfo(sender);
-					_config.AccountInfos[index] = accountInfo;
-					_config.Save(configFilePath);
+					var loginResult = await _gameManager.LogIn(accountInfo, x => CryptoFactory.Unprotect(x, _entropy));
+					if (loginResult)
+					{
+						var index = GetIndexOfAccountInfo(sender);
+						_config.AccountInfos[index] = accountInfo;
+						_config.Save(configFilePath);
+					}
+					var message = loginResult ? "로그인 성공" : "로그인 실패";
+					SetStatusStrip(sender, message);
+					break;
 				}
-				var message = loginResult ? "로그인 성공" : "로그인 실패";
-				SetStatusStrip(sender, message);
-			}
-			catch (System.Net.Http.HttpRequestException)
-			{
-				MessageBox.Show("통신 오류 발생. 다시 시도해 주세요.");
-			}
-			catch (Exception ex)
-			{
-				if (ex.ToString().Contains("WindowsCryptographicException"))
-					MessageBox.Show("패스워드 복호화에 실패했습니다.\n키가 손상되었을 수 있습니다. 오류 반복 시 설정 파일을 삭제한 후 재시도해 보시기 바랍니다.");
+				catch (System.Net.Http.HttpRequestException)
+				{
+					count--;
+				}
+				catch (Exception ex)
+				{
+					if (ex.ToString().Contains("WindowsCryptographicException"))
+						MessageBox.Show("패스워드 복호화에 실패했습니다.\n키가 손상되었을 수 있습니다. 오류 반복 시 설정 파일을 삭제한 후 재시도해 보시기 바랍니다.");
+					break;
+				}
+				if(count <= 0)
+				{
+					MessageBox.Show("통신 오류 발생. 다시 시도해 주세요.");
+					break;
+				}
 			}
 		}
 
