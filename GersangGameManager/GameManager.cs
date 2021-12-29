@@ -24,16 +24,15 @@ namespace GersangGameManager
 			_runningClientList = new Dictionary<string, bool>();
 		}
 
-		public async Task<LogInResult> LogIn(ClientInfo accountInfo, DecryptDelegate decryptor, bool ignoreAleadyStarted)
+		public async Task<LogInResult> LogIn(ClientInfo clientInfo, DecryptDelegate decryptor, bool ignoreAleadyStarted)
 		{
-			_isLoginSucceed = false;
-			_handler.Configure(accountInfo);
-			_ = _runningClientList.TryGetValue(accountInfo.ID, out bool isStartedClient);
-			if (isStartedClient)
+			_handler.Configure(clientInfo);
+			_ = _runningClientList.TryGetValue(clientInfo.ID, out bool isStartedClient);
+			if (isStartedClient && !ignoreAleadyStarted)
 			{
 				return new LogInResult(LogInResultType.StartedClient);
 			}
-			ChangeInstallPath(accountInfo.ClientPath);
+			ChangeInstallPath(clientInfo.ClientPath);
 
 			int count = 3;
 			LogInResult loginResult;
@@ -56,9 +55,11 @@ namespace GersangGameManager
 
 			if (loginResult.Type == LogInResultType.Success)
 			{
-				_currentLogInAccount = accountInfo.ID;
+				_currentLogInAccount = clientInfo.ID;
 				_runningClientList[_currentLogInAccount] = false;
 			}
+			else if (loginResult.Type == LogInResultType.RequireOtp)
+				_currentLogInAccount = clientInfo.ID;
 
 			return loginResult;
 		}
@@ -67,12 +68,19 @@ namespace GersangGameManager
 		{
 			var otpResult = await _handler.InputOtp(otp);
 
+			if (otpResult.Type == OtpResultType.Success)
+			{
+				_runningClientList[_currentLogInAccount] = false;
+			}
+
 			return otpResult;
 		}
 
 		public async Task GameStart()
 		{
 			_isLoginSucceed = await _handler.CheckLogIn();
+			if (!_isLoginSucceed)
+				return;
 
 			await _handler.GameStart();
 			_runningClientList[_currentLogInAccount] = true;
