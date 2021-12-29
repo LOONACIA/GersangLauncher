@@ -57,11 +57,7 @@ namespace GersangLauncher.UserControls
 
 		public bool IsNeedToUpdate
 		{
-			set
-			{
-				BtnPatch.Enabled = value;
-				Invalidate();
-			}
+			set => BtnPatch.Enabled = value;
 		}
 
 		private bool isPasswordChanged = false;

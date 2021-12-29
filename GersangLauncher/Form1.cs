@@ -90,10 +90,8 @@ namespace GersangLauncher
 				_currentTestVersion = await _gameManager.GetCurrentVersion(ServerType.Test);
 
 			var localVersion = _gameManager.CheckLocalVersion(clientInfo.ClientPath);
-			if (localVersion == -1)
-				return;
 			var currentVersion = clientInfo.ServerType == ServerType.Main ? _currentMainVersion : _currentTestVersion;
-			clientInfoUserControl.IsNeedToUpdate = localVersion < currentVersion;
+			clientInfoUserControl.IsNeedToUpdate = localVersion != -1 && localVersion < currentVersion;
 		}
 
 		private void RemoveClientInfoControl()
