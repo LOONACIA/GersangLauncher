@@ -9,7 +9,7 @@ namespace GersangLauncher
 			InitializeComponent();
 			var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 			LabelVersion.Text = $"거상 런처 v{version.Major}.{version.Minor}.{version.Build}";
-			TextBoxLicense.BackColor = this.BackColor;
+			TextBoxLicense.BackColor = BackColor;
 			TextBoxLicense.Text =
 "MIT LICENSE" + "\r\n\r\n" +
 "Copyright (c) 2021 LOONACIA" + "\r\n\r\n" +

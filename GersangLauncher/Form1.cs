@@ -1,8 +1,10 @@
-﻿using GersangLauncher.Models;
-using GersangLauncher.Models.GameManager;
+﻿using GersangGameManager;
+using GersangGameManager.Handler;
+using GersangLauncher.Models;
 using GersangLauncher.UserControls;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GersangLauncher
@@ -14,6 +16,9 @@ namespace GersangLauncher
 		private const string configFilePath = ".\\config.json";
 		internal static string? _entropy;
 
+		private int _currentMainVersion = -1;
+		private int _currentTestVersion = -1;
+
 		public Form1()
 		{
 			OpenConfig();
@@ -21,12 +26,12 @@ namespace GersangLauncher
 
 			InitializeComponent();
 
-			for (int index = 0; index < _config.AccountInfos.Count; ++index)
-			{
-				AddAccountInfoControl();
-			}
-
 			InitializeGameManager();
+
+			for (int index = 0; index < _config.ClientList.Count; ++index)
+			{
+				AddClientInfoControl();
+			}
 		}
 
 		private void OpenConfig()
@@ -45,116 +50,176 @@ namespace GersangLauncher
 			_gameManager = new GameManager(handler);
 		}
 
-		private void AddAccountInfoControl()
+		private void AddClientInfoControl()
 		{
-			var index = AccountPanel.Controls.OfType<AccountInfoUserControl>().Count();
+			var index = ClientListPanel.Controls.OfType<ClientInfoUserControl>().Count();
 			if (index >= 7)
 			{
 				MessageBox.Show("더 이상 추가할 수 없습니다.");
 				return;
 			}
 
-			while (_config.AccountInfos.Count <= index)
-				_config.AccountInfos.Add(new AccountInfo());
+			while (_config.ClientList.Count <= index)
+				_config.ClientList.Add(new ClientInfo());
 
-			AccountInfo accountInfo = _config.AccountInfos[index] ?? (_config.AccountInfos[index] = new AccountInfo());
+			ClientInfo clientInfo = _config.ClientList[index] ?? (_config.ClientList[index] = new ClientInfo());
+			ClientInfoUserControl clientInfoUserControl = new ClientInfoUserControl(clientInfo, index);
+			clientInfoUserControl.HideServerPanel = _config.HideServerPanel;
+			
+			if (_config.HideServerPanel)
+				clientInfo.ServerType = ServerType.Main;
 
-			AccountInfoUserControl accountInfoUserControl = new AccountInfoUserControl(accountInfo, index);
-			accountInfoUserControl.SaveBtnClicked += AccountInfoUserControl_SaveBtnClicked;
-			accountInfoUserControl.InstallPathChanged += AccountInfoUserControl_InstallPathChanged;
-			accountInfoUserControl.LogInBtnClicked += AccountInfoUserControl_LogInBtnClickedAsync;
-			accountInfoUserControl.StartBtnClicked += AccountInfoUserControl_StartBtnClicked;
-			accountInfoUserControl.SearchBtnClicked += AccountInfoUserControl_SearchBtnClicked;
-			AccountPanel.Controls.Add(accountInfoUserControl);
+			if (!string.IsNullOrEmpty(clientInfo.ClientPath))
+				CheckUpdate(clientInfoUserControl, clientInfo);
+
+			clientInfoUserControl.SaveBtnClicked += ClientInfoUserControl_SaveBtnClicked;
+			clientInfoUserControl.InstallPathChanged += ClientInfoUserControl_InstallPathChanged;
+			clientInfoUserControl.LogInBtnClicked += ClientInfoUserControl_LogInBtnClickedAsync;
+			clientInfoUserControl.StartBtnClicked += ClientInfoUserControl_StartBtnClicked;
+			clientInfoUserControl.SearchBtnClicked += ClientInfoUserControl_SearchBtnClicked;
+			clientInfoUserControl.PatchBtnClicked += ClientInfoUserControl_PatchBtnClicked;
+
+			ClientListPanel.Controls.Add(clientInfoUserControl);
 		}
 
-		private void RemoveAccountInfoControl()
+		private async Task CheckUpdate(ClientInfoUserControl clientInfoUserControl, ClientInfo clientInfo)
 		{
-			var list = AccountPanel.Controls.OfType<AccountInfoUserControl>().ToList();
+			if(_currentMainVersion == -1)
+				_currentMainVersion = await _gameManager.GetCurrentVersion(ServerType.Main);
+			if(_currentTestVersion == -1)
+				_currentTestVersion = await _gameManager.GetCurrentVersion(ServerType.Test);
+
+			var localVersion = _gameManager.CheckLocalVersion(clientInfo.ClientPath);
+			if (localVersion == -1)
+				return;
+			var currentVersion = clientInfo.ServerType == ServerType.Main ? _currentMainVersion : _currentTestVersion;
+			clientInfoUserControl.IsNeedToUpdate = localVersion < currentVersion;
+		}
+
+		private void RemoveClientInfoControl()
+		{
+			var list = ClientListPanel.Controls.OfType<ClientInfoUserControl>().ToList();
 			if (list.Count <= 1)
 			{
 				MessageBox.Show("더 이상 삭제할 수 없습니다.");
 				return;
 			}
-			AccountPanel.Controls.Remove(list[^1]);
-			_config.AccountInfos.Remove(_config.AccountInfos[^1]);
+			ClientListPanel.Controls.Remove(list[^1]);
+			_config.ClientList.Remove(_config.ClientList[^1]);
 		}
 
-		private void AccountInfoUserControl_SaveBtnClicked(object? sender, AccountInfo e)
+		private void ClientInfoUserControl_SaveBtnClicked(object? sender, ClientInfo e)
 		{
-			var index = GetIndexOfAccountInfo(sender);
-			_config.AccountInfos[index] = e;
+			var index = GetIndexOfClientInfoControl(sender);
+			_config.ClientList[index] = e;
 			_config.Save(configFilePath);
+			CheckUpdate(sender as ClientInfoUserControl, _config.ClientList[index]);
 		}
 
-		private void AccountInfoUserControl_InstallPathChanged(object? sender, string e)
+		private void ClientInfoUserControl_InstallPathChanged(object? sender, string e)
 		{
-			var index = GetIndexOfAccountInfo(sender);
-			_config.AccountInfos[index].Path = e;
+			var index = GetIndexOfClientInfoControl(sender);
+			_config.ClientList[index].ClientPath = e;
 			_gameManager.ChangeInstallPath(e);
+			CheckUpdate(sender as ClientInfoUserControl, _config.ClientList[index]);
 		}
 
-		private async void AccountInfoUserControl_LogInBtnClickedAsync(object? sender, AccountInfo e)
+		private async Task<bool> TryLogIn(ClientInfo clientInfo, bool ignoreAleadyStarted)
 		{
-			AccountInfo accountInfo = e;
-			int count = 3;
-			while (true)
+			try
 			{
-				try
+				var loginResult = await _gameManager.LogIn(clientInfo, x => CryptoFactory.Unprotect(x, _entropy), ignoreAleadyStarted);
+				string message = string.Empty;
+				var ret = false;
+				switch (loginResult.Type)
 				{
-					var loginResult = await _gameManager.LogIn(accountInfo, x => CryptoFactory.Unprotect(x, _entropy));
-					if (loginResult)
-					{
-						var index = GetIndexOfAccountInfo(sender);
-						_config.AccountInfos[index] = accountInfo;
-						_config.Save(configFilePath);
-					}
-					var message = loginResult ? "로그인 성공" : "로그인 실패";
-					SetStatusStrip(sender, message);
-					break;
+					case LogInResultType.Success:
+						break;
+					case LogInResultType.Fail:
+						if (!string.IsNullOrEmpty(loginResult.Message))
+							MessageBox.Show(loginResult.Message);
+						break;
+					case LogInResultType.RequireOtp:
+						FormInputText form = new();
+						form.Text = "OTP 입력";
+						OtpResult otpResult;
+						do
+						{
+							var dialogResult = form.ShowDialog();
+							if (dialogResult != DialogResult.OK)
+								break;
+							otpResult = await _gameManager.InputOTP(form.InputValue);
+						} while (otpResult.Type != OtpResultType.Success);
+						form.Dispose();
+						break;
+					case LogInResultType.StartedClient:
+						var result = MessageBox.Show("게임에 접속 중인 계정으로 재로그인 할 경우 게임이 종료될 수 있습니다. 계속 진행하시겠습니까?");
+						if (result != DialogResult.OK)
+							break;
+
+						return await TryLogIn(clientInfo, true);
 				}
-				catch (System.Net.Http.HttpRequestException)
-				{
-					count--;
-				}
-				catch (Exception ex)
-				{
-					if (ex.ToString().Contains("WindowsCryptographicException"))
-						MessageBox.Show("패스워드 복호화에 실패했습니다.\n키가 손상되었을 수 있습니다. 오류 반복 시 설정 파일을 삭제한 후 재시도해 보시기 바랍니다.");
-					break;
-				}
-				if(count <= 0)
-				{
-					MessageBox.Show("통신 오류 발생. 다시 시도해 주세요.");
-					break;
-				}
+				return loginResult.Type == LogInResultType.Success;
+			}
+			catch (Exception ex)
+			{
+				if (ex.ToString().Contains("WindowsCryptographicException"))
+					MessageBox.Show("패스워드 복호화에 실패했습니다.\n키가 손상되었을 수 있습니다. 오류 반복 시 설정 파일을 삭제한 후 재시도해 보시기 바랍니다.");
+
+				return false;
 			}
 		}
 
-		private async void AccountInfoUserControl_StartBtnClicked(object? sender, EventArgs e)
+		private async void ClientInfoUserControl_LogInBtnClickedAsync(object? sender, ClientInfo e)
+		{
+			var result = await TryLogIn(e, false);
+			var message = result ? "로그인 성공" : "로그인 실패";
+			SetStatusStrip(sender, message);
+		}
+
+		private async void ClientInfoUserControl_StartBtnClicked(object? sender, EventArgs e)
 		{
 			await _gameManager.GameStart();
 			SetStatusStrip(sender, "게임 실행");
 		}
 
-		private async void AccountInfoUserControl_SearchBtnClicked(object? sender, EventArgs e)
+		private async void ClientInfoUserControl_SearchBtnClicked(object? sender, ClientInfo e)
 		{
 			var searchResult = await _gameManager.GetSearchReward();
-			var message = searchResult ? "검색 보상 수령 완료" : "검색 보상 수령 실패";
+			if (searchResult is null)
+			{
+				var loginResult = await TryLogIn(e, false);
+				if (loginResult)
+				{
+					searchResult = await _gameManager.GetSearchReward();
+				}
+			}
+
+			var message = searchResult.Value ? "검색 보상 수령 완료" : "검색 보상 수령 실패";
 			SetStatusStrip(sender, message);
 		}
 
-		private int GetIndexOfAccountInfo(object? sender) => (sender as AccountInfoUserControl).Index;
+		private void ClientInfoUserControl_PatchBtnClicked(object? sender, ClientInfo e)
+		{
+			var frmPatch = new FormPatch(_gameManager, e.ClientPath, e.ServerType);
+			frmPatch.ShowDialog();
+		}
+
+		private int GetIndexOfClientInfoControl(object? sender) => (sender as ClientInfoUserControl).Index;
 
 		private void SetStatusStrip(object? sender, string message)
 		{
-			if (sender is AccountInfoUserControl)
+			if (sender is ClientInfoUserControl)
 			{
-				var index = GetIndexOfAccountInfo(sender);
-				LauncherStatusLabel.Text = $"{index + 1}번 클라: {message}";
+				var index = GetIndexOfClientInfoControl(sender);
+				SetStatusStrip(index, message);
 			}
 			else
 				LauncherStatusLabel.Text = message;
+		}
+		private void SetStatusStrip(int index, string message)
+		{
+			LauncherStatusLabel.Text = $"{index + 1}번 클라: {message}";
 		}
 
 		private void OpenSettingsTSBtn_Click(object sender, EventArgs e)
@@ -165,20 +230,21 @@ namespace GersangLauncher
 			if (prev_UseCredential != _config.UseUserCredential)
 			{
 				MessageBox.Show("재시작 후 적용됩니다. 저장된 비밀번호는 초기화됩니다.");
-				_config.AccountInfos.Where(x => !string.IsNullOrEmpty(x.EncryptedPassword)).ToList().ForEach(x => x.EncryptedPassword = string.Empty);
+				_config.ClientList.Where(x => !string.IsNullOrEmpty(x.EncryptedPassword)).ToList().ForEach(x => x.EncryptedPassword = string.Empty);
 				Close();
 				return;
 			}
+			ClientListPanel.Controls.OfType<ClientInfoUserControl>().ToList().ForEach(x => x.HideServerPanel = _config.HideServerPanel);
 		}
 
 		private void AddClientTSBtn_Click(object sender, EventArgs e)
 		{
-			AddAccountInfoControl();
+			AddClientInfoControl();
 		}
 
 		private void RemoveClientTSBtn_Click(object sender, EventArgs e)
 		{
-			RemoveAccountInfoControl();
+			RemoveClientInfoControl();
 		}
 
 		private void OpenInfoTSBtn_Click(object sender, EventArgs e)
@@ -193,7 +259,7 @@ namespace GersangLauncher
 				_config.Save(configFilePath);
 		}
 
-		private void Form1_Shown(object sender, EventArgs e)
+		private async void Form1_Shown(object sender, EventArgs e)
 		{
 			while (_config.UseUserCredential)
 			{
@@ -202,7 +268,7 @@ namespace GersangLauncher
 				if (_entropy is null)
 					break;
 
-				if (!_config.AccountInfos.Any(x => !string.IsNullOrEmpty(x.EncryptedPassword)))
+				if (!_config.ClientList.Any(x => !string.IsNullOrEmpty(x.EncryptedPassword)))
 					break;
 
 				if (KeyValidation())
@@ -223,7 +289,7 @@ namespace GersangLauncher
 			bool ret = false;
 			try
 			{
-				_ = CryptoFactory.Unprotect(_config.AccountInfos.FirstOrDefault(x => !string.IsNullOrEmpty(x.EncryptedPassword)).EncryptedPassword, _entropy);
+				_ = CryptoFactory.Unprotect(_config.ClientList.FirstOrDefault(x => !string.IsNullOrEmpty(x.EncryptedPassword)).EncryptedPassword, _entropy);
 				ret = true;
 			}
 			catch (Exception ex)

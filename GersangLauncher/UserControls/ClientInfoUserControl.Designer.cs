@@ -1,6 +1,6 @@
 ﻿namespace GersangLauncher.UserControls
 {
-	partial class AccountInfoUserControl
+	partial class ClientInfoUserControl
 	{
 		/// <summary> 
 		/// 필수 디자이너 변수입니다.
@@ -29,7 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+			this.TablePanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnPatch = new System.Windows.Forms.Button();
 			this.BtnSearch = new System.Windows.Forms.Button();
 			this.BtnStart = new System.Windows.Forms.Button();
@@ -41,41 +41,48 @@
 			this.BtnFindGamePath = new System.Windows.Forms.Button();
 			this.BtnSave = new System.Windows.Forms.Button();
 			this.BtnLogIn = new System.Windows.Forms.Button();
-			this.AccountControlToolTip = new System.Windows.Forms.ToolTip(this.components);
-			this.tableLayoutPanel1.SuspendLayout();
+			this.PanelServerType = new System.Windows.Forms.FlowLayoutPanel();
+			this.LabelServerType = new System.Windows.Forms.Label();
+			this.RBIsMain = new System.Windows.Forms.RadioButton();
+			this.RBIsTest = new System.Windows.Forms.RadioButton();
+			this.ClientControlToolTip = new System.Windows.Forms.ToolTip(this.components);
+			this.TablePanelMain.SuspendLayout();
+			this.PanelServerType.SuspendLayout();
 			this.SuspendLayout();
 			// 
-			// tableLayoutPanel1
+			// TablePanelMain
 			// 
-			this.tableLayoutPanel1.ColumnCount = 9;
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
-			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
-			this.tableLayoutPanel1.Controls.Add(this.BtnPatch, 9, 0);
-			this.tableLayoutPanel1.Controls.Add(this.BtnSearch, 7, 0);
-			this.tableLayoutPanel1.Controls.Add(this.BtnStart, 6, 0);
-			this.tableLayoutPanel1.Controls.Add(this.TextBoxGamePath, 3, 1);
-			this.tableLayoutPanel1.Controls.Add(this.label2, 3, 0);
-			this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
-			this.tableLayoutPanel1.Controls.Add(this.TextBoxPW, 4, 0);
-			this.tableLayoutPanel1.Controls.Add(this.TextBoxID, 2, 0);
-			this.tableLayoutPanel1.Controls.Add(this.BtnFindGamePath, 1, 1);
-			this.tableLayoutPanel1.Controls.Add(this.BtnSave, 0, 0);
-			this.tableLayoutPanel1.Controls.Add(this.BtnLogIn, 5, 0);
-			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-			this.tableLayoutPanel1.RowCount = 2;
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel1.Size = new System.Drawing.Size(650, 70);
-			this.tableLayoutPanel1.TabIndex = 0;
+			this.TablePanelMain.ColumnCount = 9;
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
+			this.TablePanelMain.Controls.Add(this.BtnPatch, 9, 0);
+			this.TablePanelMain.Controls.Add(this.BtnSearch, 7, 0);
+			this.TablePanelMain.Controls.Add(this.BtnStart, 6, 0);
+			this.TablePanelMain.Controls.Add(this.TextBoxGamePath, 5, 1);
+			this.TablePanelMain.Controls.Add(this.label2, 3, 0);
+			this.TablePanelMain.Controls.Add(this.label1, 1, 0);
+			this.TablePanelMain.Controls.Add(this.TextBoxPW, 4, 0);
+			this.TablePanelMain.Controls.Add(this.TextBoxID, 2, 0);
+			this.TablePanelMain.Controls.Add(this.BtnFindGamePath, 4, 1);
+			this.TablePanelMain.Controls.Add(this.BtnSave, 0, 0);
+			this.TablePanelMain.Controls.Add(this.BtnLogIn, 5, 0);
+			this.TablePanelMain.Controls.Add(this.PanelServerType, 1, 1);
+			this.TablePanelMain.Location = new System.Drawing.Point(0, 0);
+			this.TablePanelMain.Name = "TablePanelMain";
+			this.TablePanelMain.RowCount = 2;
+			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TablePanelMain.Size = new System.Drawing.Size(650, 70);
+			this.TablePanelMain.TabIndex = 0;
 			// 
 			// BtnPatch
 			// 
@@ -88,6 +95,7 @@
 			this.BtnPatch.TabIndex = 10;
 			this.BtnPatch.Text = "패치";
 			this.BtnPatch.UseVisualStyleBackColor = true;
+			this.BtnPatch.Click += new System.EventHandler(this.BtnPatch_Click);
 			// 
 			// BtnSearch
 			// 
@@ -116,13 +124,13 @@
 			// 
 			// TextBoxGamePath
 			// 
-			this.tableLayoutPanel1.SetColumnSpan(this.TextBoxGamePath, 6);
+			this.TablePanelMain.SetColumnSpan(this.TextBoxGamePath, 4);
 			this.TextBoxGamePath.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TextBoxGamePath.Enabled = false;
-			this.TextBoxGamePath.Location = new System.Drawing.Point(224, 41);
+			this.TextBoxGamePath.Location = new System.Drawing.Point(370, 41);
 			this.TextBoxGamePath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
 			this.TextBoxGamePath.Name = "TextBoxGamePath";
-			this.TextBoxGamePath.Size = new System.Drawing.Size(423, 23);
+			this.TextBoxGamePath.Size = new System.Drawing.Size(277, 23);
 			this.TextBoxGamePath.TabIndex = 8;
 			// 
 			// label2
@@ -172,12 +180,11 @@
 			// 
 			// BtnFindGamePath
 			// 
-			this.tableLayoutPanel1.SetColumnSpan(this.BtnFindGamePath, 2);
 			this.BtnFindGamePath.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnFindGamePath.Location = new System.Drawing.Point(78, 40);
+			this.BtnFindGamePath.Location = new System.Drawing.Point(252, 40);
 			this.BtnFindGamePath.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
 			this.BtnFindGamePath.Name = "BtnFindGamePath";
-			this.BtnFindGamePath.Size = new System.Drawing.Size(140, 25);
+			this.BtnFindGamePath.Size = new System.Drawing.Size(112, 25);
 			this.BtnFindGamePath.TabIndex = 7;
 			this.BtnFindGamePath.Text = "경로";
 			this.BtnFindGamePath.UseVisualStyleBackColor = true;
@@ -189,7 +196,7 @@
 			this.BtnSave.Location = new System.Drawing.Point(5, 5);
 			this.BtnSave.Margin = new System.Windows.Forms.Padding(5);
 			this.BtnSave.Name = "BtnSave";
-			this.tableLayoutPanel1.SetRowSpan(this.BtnSave, 2);
+			this.TablePanelMain.SetRowSpan(this.BtnSave, 2);
 			this.BtnSave.Size = new System.Drawing.Size(65, 60);
 			this.BtnSave.TabIndex = 0;
 			this.BtnSave.TabStop = false;
@@ -210,22 +217,71 @@
 			this.BtnLogIn.UseVisualStyleBackColor = true;
 			this.BtnLogIn.Click += new System.EventHandler(this.BtnLogIn_Click);
 			// 
-			// AccountInfoUserControl
+			// PanelServerType
+			// 
+			this.TablePanelMain.SetColumnSpan(this.PanelServerType, 3);
+			this.PanelServerType.Controls.Add(this.LabelServerType);
+			this.PanelServerType.Controls.Add(this.RBIsMain);
+			this.PanelServerType.Controls.Add(this.RBIsTest);
+			this.PanelServerType.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.PanelServerType.Location = new System.Drawing.Point(78, 38);
+			this.PanelServerType.Name = "PanelServerType";
+			this.PanelServerType.Size = new System.Drawing.Size(168, 29);
+			this.PanelServerType.TabIndex = 11;
+			// 
+			// LabelServerType
+			// 
+			this.LabelServerType.Anchor = System.Windows.Forms.AnchorStyles.Left;
+			this.LabelServerType.AutoSize = true;
+			this.LabelServerType.Location = new System.Drawing.Point(1, 5);
+			this.LabelServerType.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+			this.LabelServerType.Name = "LabelServerType";
+			this.LabelServerType.Size = new System.Drawing.Size(31, 15);
+			this.LabelServerType.TabIndex = 5;
+			this.LabelServerType.Text = "서버";
+			// 
+			// RBIsMain
+			// 
+			this.RBIsMain.AutoSize = true;
+			this.RBIsMain.Checked = true;
+			this.RBIsMain.Location = new System.Drawing.Point(36, 3);
+			this.RBIsMain.Margin = new System.Windows.Forms.Padding(3, 3, 1, 3);
+			this.RBIsMain.Name = "RBIsMain";
+			this.RBIsMain.Size = new System.Drawing.Size(49, 19);
+			this.RBIsMain.TabIndex = 3;
+			this.RBIsMain.TabStop = true;
+			this.RBIsMain.Text = "메인";
+			this.RBIsMain.UseVisualStyleBackColor = true;
+			// 
+			// RBIsTest
+			// 
+			this.RBIsTest.AutoSize = true;
+			this.RBIsTest.Location = new System.Drawing.Point(87, 3);
+			this.RBIsTest.Margin = new System.Windows.Forms.Padding(1, 3, 1, 3);
+			this.RBIsTest.Name = "RBIsTest";
+			this.RBIsTest.Size = new System.Drawing.Size(61, 19);
+			this.RBIsTest.TabIndex = 4;
+			this.RBIsTest.Text = "테스트";
+			this.RBIsTest.UseVisualStyleBackColor = true;
+			// 
+			// ClientInfoUserControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.Controls.Add(this.tableLayoutPanel1);
-			this.Name = "AccountInfoUserControl";
+			this.Controls.Add(this.TablePanelMain);
+			this.Name = "ClientInfoUserControl";
 			this.Size = new System.Drawing.Size(650, 70);
-			this.tableLayoutPanel1.ResumeLayout(false);
-			this.tableLayoutPanel1.PerformLayout();
+			this.TablePanelMain.ResumeLayout(false);
+			this.TablePanelMain.PerformLayout();
+			this.PanelServerType.ResumeLayout(false);
+			this.PanelServerType.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
 
 		#endregion
 
-		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+		private System.Windows.Forms.TableLayoutPanel TablePanelMain;
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button BtnStart;
@@ -237,6 +293,10 @@
 		private System.Windows.Forms.Button BtnLogIn;
 		private System.Windows.Forms.Button BtnSearch;
 		private System.Windows.Forms.Button BtnPatch;
-		private System.Windows.Forms.ToolTip AccountControlToolTip;
+		private System.Windows.Forms.ToolTip ClientControlToolTip;
+		private System.Windows.Forms.FlowLayoutPanel PanelServerType;
+		private System.Windows.Forms.RadioButton RBIsMain;
+		private System.Windows.Forms.RadioButton RBIsTest;
+		private System.Windows.Forms.Label LabelServerType;
 	}
 }

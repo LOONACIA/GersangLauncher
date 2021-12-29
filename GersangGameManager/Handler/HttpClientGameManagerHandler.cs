@@ -1,4 +1,4 @@
-﻿using GersangLauncher.Models.Service;
+﻿using GersangGameManager.Service;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -6,9 +6,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GersangLauncher.Models.GameManager
+namespace GersangGameManager.Handler
 {
-	internal class HttpClientGameManagerHandler : GameManagerHandler
+	public class HttpClientGameManagerHandler : GameManagerHandler
 	{
 		private HttpService _httpService;
 		private HttpContentBuilder _builder;
@@ -18,9 +18,9 @@ namespace GersangLauncher.Models.GameManager
 
 		private string _cmdStr;
 
-		public override void Configure(AccountInfo accountInfo)
+		protected override void Configure(ClientInfo clientInfo)
 		{
-			base.Configure(accountInfo);
+			base.Configure(clientInfo);
 			_builder = new HttpContentBuilder();
 			_httpService = new HttpService();
 			_httpService.BaseAddress = base.BaseAddress;
@@ -28,11 +28,11 @@ namespace GersangLauncher.Models.GameManager
 			_websocketService.OnOpen += _websocketService_OnOpen;
 		}
 
-		public override async Task<(LogInResult result, string message)> LogIn(DecryptDelegate decryptor)
+		protected override async Task<LogInResult> LogIn(DecryptDelegate decryptor)
 		{
 			_builder.Clear();
-			var password = decryptor(_accountInfo.EncryptedPassword);
-			_builder.Add(ParamID, _accountInfo.ID);
+			var password = decryptor(_clientInfo.EncryptedPassword);
+			_builder.Add(ParamID, _clientInfo.ID);
 			_builder.Add(ParamPW, password);
 			var content = _builder.Build(ContentType.FormData);
 
@@ -40,17 +40,17 @@ namespace GersangLauncher.Models.GameManager
 
 			var result = body.ToLower();
 			if (result.Contains("otp"))
-				return (LogInResult.RequireOtp, string.Empty);
+				return new LogInResult(LogInResultType.RequireOtp);
 			else if (result.Contains("alert"))
 			{
 				var errorMessage = GetAlert(result);
-				return (LogInResult.Fail, errorMessage);
+				return new LogInResult(LogInResultType.Fail, errorMessage);
 			}
 			else
-				return (LogInResult.Success, string.Empty);
+				return new LogInResult(LogInResultType.Success);
 		}
 
-		public override async Task<(OtpResult result, string message)> InputOtp(string otp)
+		protected override async Task<OtpResult> InputOtp(string otp)
 		{
 			if (string.IsNullOrEmpty(otp))
 				throw new ArgumentNullException(nameof(otp));
@@ -64,36 +64,47 @@ namespace GersangLauncher.Models.GameManager
 			var errorMessage = GetAlert(result);
 
 			if (!string.IsNullOrEmpty(errorMessage))
-				return (OtpResult.Fail, errorMessage);
+				return new OtpResult(OtpResultType.Fail, errorMessage);
 			else
 			{
 				_builder.Clear();
-				return (OtpResult.Success, string.Empty);
+				return new OtpResult(OtpResultType.Success);
 			}
 		}
 
-		public override async Task GameStart()
+		protected override async Task<bool> CheckLogIn()
+		{
+			await Task.Yield();
+			return !string.IsNullOrEmpty(_httpService.GetCookie("memberID"));
+		}
+
+		protected override async Task GameStart()
 		{
 			var body = await _httpService.GetAsync(IndexUrl);
-			var clientType = "main";
-			_cmdStr = clientType + '\t' + GetCmdStr(body);
+			var serverType = _clientInfo.ServerType switch
+			{
+				ServerType.Main => "main",
+				ServerType.Test => "test",
+				_ => "main"
+			};
+			_cmdStr = serverType + '\t' + GetCmdStr(body);
 
 			await ExecuteStarter();
 		}
 
-		public override async Task LogOut()
+		protected override async Task LogOut()
 		{
 			await _httpService.GetAsync(LogOutUrl);
 		}
 
-		public async Task<bool> GetSearchReward()
+		protected override async Task<bool> GetSearchReward()
 		{
 			var body = await _httpService.GetAsync(EventUrl);
 
 			var eventUrls = GetEventUrls(body);
 			string target = string.Empty;
 			string lastSegment = string.Empty;
-			foreach(var evtUrl in eventUrls)
+			foreach (var evtUrl in eventUrls)
 			{
 				var response = await _httpService.GetAsync(evtUrl);
 				if (!response.Contains("거상 페이지 오류"))
@@ -106,7 +117,7 @@ namespace GersangLauncher.Models.GameManager
 				}
 			}
 
-			if(target.StartsWith('/'))
+			if (target.StartsWith('/'))
 				target = target[1..];
 
 			// Get referrer cookie from BaseAddress/main.gs
@@ -134,7 +145,7 @@ namespace GersangLauncher.Models.GameManager
 				return;
 
 			string path = string.Empty;
-			using (RegistryKey? registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command"))
+			using (RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command"))
 			{
 				if (registryKey != null)
 				{
@@ -156,7 +167,7 @@ namespace GersangLauncher.Models.GameManager
 			await _websocketService.ConnectAsync(_wsUrl);
 		}
 
-		private async void _websocketService_OnOpen(object? sender, EventArgs e)
+		private async void _websocketService_OnOpen(object sender, EventArgs e)
 		{
 			// Send Start Command to Game Starter
 			if (_websocketService is not null)

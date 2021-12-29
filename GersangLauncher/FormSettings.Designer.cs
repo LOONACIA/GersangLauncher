@@ -35,6 +35,7 @@
 			this.GroupBoxClientLauncher = new System.Windows.Forms.GroupBox();
 			this.ChkBoxByPassStarter = new System.Windows.Forms.CheckBox();
 			this.GroupBoxLauncher = new System.Windows.Forms.GroupBox();
+			this.ChkBoxHideServerType = new System.Windows.Forms.CheckBox();
 			this.ChkBoxSavePassword = new System.Windows.Forms.CheckBox();
 			this.ChkBoxUseCredential = new System.Windows.Forms.CheckBox();
 			this.SettingsToolTip = new System.Windows.Forms.ToolTip(this.components);
@@ -103,14 +104,25 @@
 			// 
 			// GroupBoxLauncher
 			// 
+			this.GroupBoxLauncher.Controls.Add(this.ChkBoxHideServerType);
 			this.GroupBoxLauncher.Controls.Add(this.ChkBoxSavePassword);
 			this.GroupBoxLauncher.Controls.Add(this.ChkBoxUseCredential);
 			this.GroupBoxLauncher.Location = new System.Drawing.Point(167, 12);
 			this.GroupBoxLauncher.Name = "GroupBoxLauncher";
-			this.GroupBoxLauncher.Size = new System.Drawing.Size(150, 75);
+			this.GroupBoxLauncher.Size = new System.Drawing.Size(150, 98);
 			this.GroupBoxLauncher.TabIndex = 2;
 			this.GroupBoxLauncher.TabStop = false;
 			this.GroupBoxLauncher.Text = "기본 설정";
+			// 
+			// ChkBoxHideServerType
+			// 
+			this.ChkBoxHideServerType.AutoSize = true;
+			this.ChkBoxHideServerType.Location = new System.Drawing.Point(6, 73);
+			this.ChkBoxHideServerType.Name = "ChkBoxHideServerType";
+			this.ChkBoxHideServerType.Size = new System.Drawing.Size(118, 19);
+			this.ChkBoxHideServerType.TabIndex = 2;
+			this.ChkBoxHideServerType.Text = "서버 선택 숨기기";
+			this.ChkBoxHideServerType.UseVisualStyleBackColor = true;
 			// 
 			// ChkBoxSavePassword
 			// 
@@ -138,7 +150,7 @@
 			// 
 			// BtnSave
 			// 
-			this.BtnSave.Location = new System.Drawing.Point(222, 93);
+			this.BtnSave.Location = new System.Drawing.Point(222, 141);
 			this.BtnSave.Name = "BtnSave";
 			this.BtnSave.Size = new System.Drawing.Size(95, 29);
 			this.BtnSave.TabIndex = 3;
@@ -148,7 +160,7 @@
 			// 
 			// BtnCancel
 			// 
-			this.BtnCancel.Location = new System.Drawing.Point(222, 128);
+			this.BtnCancel.Location = new System.Drawing.Point(222, 176);
 			this.BtnCancel.Name = "BtnCancel";
 			this.BtnCancel.Size = new System.Drawing.Size(95, 29);
 			this.BtnCancel.TabIndex = 4;
@@ -160,7 +172,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-			this.ClientSize = new System.Drawing.Size(331, 169);
+			this.ClientSize = new System.Drawing.Size(331, 217);
 			this.Controls.Add(this.BtnCancel);
 			this.Controls.Add(this.BtnSave);
 			this.Controls.Add(this.GroupBoxLauncher);
@@ -194,5 +206,6 @@
 		private System.Windows.Forms.ToolTip SettingsToolTip;
 		private System.Windows.Forms.Button BtnSave;
 		private System.Windows.Forms.Button BtnCancel;
+		private System.Windows.Forms.CheckBox ChkBoxHideServerType;
 	}
 }

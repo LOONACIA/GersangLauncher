@@ -31,7 +31,7 @@
 			this.LauncherStatusStrip = new System.Windows.Forms.StatusStrip();
 			this.LauncherStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.AccountPanel = new System.Windows.Forms.FlowLayoutPanel();
+			this.ClientListPanel = new System.Windows.Forms.FlowLayoutPanel();
 			this.LauncherToolStrip = new System.Windows.Forms.ToolStrip();
 			this.OpenSettingsTSBtn = new System.Windows.Forms.ToolStripButton();
 			this.AddClientTSBtn = new System.Windows.Forms.ToolStripButton();
@@ -39,7 +39,7 @@
 			this.OpenInfoTSBtn = new System.Windows.Forms.ToolStripButton();
 			this.LauncherStatusStrip.SuspendLayout();
 			this.panel1.SuspendLayout();
-			this.AccountPanel.SuspendLayout();
+			this.ClientListPanel.SuspendLayout();
 			this.LauncherToolStrip.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -64,7 +64,7 @@
 			// 
 			this.panel1.AutoSize = true;
 			this.panel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.panel1.Controls.Add(this.AccountPanel);
+			this.panel1.Controls.Add(this.ClientListPanel);
 			this.panel1.Controls.Add(this.LauncherStatusStrip);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
@@ -74,15 +74,15 @@
 			// 
 			// AccountPanel
 			// 
-			this.AccountPanel.AutoSize = true;
-			this.AccountPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-			this.AccountPanel.Controls.Add(this.LauncherToolStrip);
-			this.AccountPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.AccountPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-			this.AccountPanel.Location = new System.Drawing.Point(0, 0);
-			this.AccountPanel.Name = "AccountPanel";
-			this.AccountPanel.Size = new System.Drawing.Size(654, 231);
-			this.AccountPanel.TabIndex = 2;
+			this.ClientListPanel.AutoSize = true;
+			this.ClientListPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+			this.ClientListPanel.Controls.Add(this.LauncherToolStrip);
+			this.ClientListPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ClientListPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+			this.ClientListPanel.Location = new System.Drawing.Point(0, 0);
+			this.ClientListPanel.Name = "AccountPanel";
+			this.ClientListPanel.Size = new System.Drawing.Size(654, 231);
+			this.ClientListPanel.TabIndex = 2;
 			// 
 			// LauncherToolStrip
 			// 
@@ -157,8 +157,8 @@
 			this.LauncherStatusStrip.PerformLayout();
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
-			this.AccountPanel.ResumeLayout(false);
-			this.AccountPanel.PerformLayout();
+			this.ClientListPanel.ResumeLayout(false);
+			this.ClientListPanel.PerformLayout();
 			this.LauncherToolStrip.ResumeLayout(false);
 			this.LauncherToolStrip.PerformLayout();
 			this.ResumeLayout(false);
@@ -170,7 +170,7 @@
 		private System.Windows.Forms.StatusStrip LauncherStatusStrip;
 		private System.Windows.Forms.ToolStripStatusLabel LauncherStatusLabel;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.FlowLayoutPanel AccountPanel;
+		private System.Windows.Forms.FlowLayoutPanel ClientListPanel;
 		private System.Windows.Forms.ToolStrip LauncherToolStrip;
 		private System.Windows.Forms.ToolStripButton AddClientTSBtn;
 		private System.Windows.Forms.ToolStripButton RemoveClientTSBtn;

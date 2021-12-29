@@ -17,4 +17,12 @@
 	  
   </PropertyGroup>
 
+  <ItemGroup>
+    <AdditionalFiles Remove="Properties\app.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GersangGameManager\GersangGameManager.csproj" />
+  </ItemGroup>
+
 </Project>

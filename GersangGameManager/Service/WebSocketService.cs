@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace GersangLauncher.Models.Service
+namespace GersangGameManager.Service
 {
 	internal class WebSocketService
 	{

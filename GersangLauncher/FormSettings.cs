@@ -21,6 +21,7 @@ namespace GersangLauncher
 
 			SettingsToolTip.SetToolTip(ChkBoxUseCredential, "패스워드 암호화에 별도 입력값을 이용할 것인지 선택합니다.\n선택하지 않으면 윈도우 사용자 정보를 이용해 암호화합니다.");
 			SettingsToolTip.SetToolTip(ChkBoxSavePassword, "클라이언트 암호를 로컬에 저장합니다.");
+			SettingsToolTip.SetToolTip(ChkBoxHideServerType, "서버 선택 그룹을 숨깁니다.");
 
 			SettingsToolTip.SetToolTip(BtnSave, "설정을 저장하고 창을 닫습니다.");
 			SettingsToolTip.SetToolTip(BtnCancel, "설정을 저장하지 않고 창을 닫습니다.");
@@ -34,6 +35,7 @@ namespace GersangLauncher
 
 			ChkBoxUseCredential.Checked = UserConfig.UseUserCredential;
 			ChkBoxSavePassword.Checked = UserConfig.SavePassword;
+			ChkBoxHideServerType.Checked = UserConfig.HideServerPanel;
 		}
 
 		private void BtnSave_Click(object sender, EventArgs e)
@@ -42,6 +44,7 @@ namespace GersangLauncher
 
 			UserConfig.UseUserCredential = ChkBoxUseCredential.Checked;
 			UserConfig.SavePassword = ChkBoxSavePassword.Checked;
+			UserConfig.HideServerPanel = ChkBoxHideServerType.Checked;
 			DialogResult = DialogResult.OK;
 		}
 

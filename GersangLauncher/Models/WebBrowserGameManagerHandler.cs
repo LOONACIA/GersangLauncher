@@ -4,11 +4,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GersangGameManager;
+using GersangGameManager.Handler;
 using GersangLauncher.Models.GameManager.Extensions;
 
-namespace GersangLauncher.Models.GameManager
+namespace GersangLauncher.Models
 {
-	internal class WebBrowserGameManagerHandler : GameManagerHandler
+	public class WebBrowserGameManagerHandler : GameManagerHandler
 	{
 		private WebBrowser _webBrowser;
 		private const string ContentType = "Content-Type: application/x-www-form-urlencoded";
@@ -19,9 +21,9 @@ namespace GersangLauncher.Models.GameManager
 
 		private List<KeyValuePair<string, string>> _queries;
 
-		public override void Configure(AccountInfo accountInfo)
+		protected override void Configure(ClientInfo clientInfo)
 		{
-			base.Configure(accountInfo);
+			base.Configure(clientInfo);
 			_tcs = new TaskCompletionSource<bool>();
 			if (_webBrowser != null)
 			{
@@ -43,11 +45,11 @@ namespace GersangLauncher.Models.GameManager
 			InternetSetCookie(base.BaseAddress, "EventNotToday", "Y");
 		}
 
-		public override async Task<(LogInResult result, string message)> LogIn(DecryptDelegate decryptor)
+		protected override async Task<LogInResult> LogIn(DecryptDelegate decryptor)
 		{
-			var password = decryptor(_accountInfo.EncryptedPassword);
+			var password = decryptor(_clientInfo.EncryptedPassword);
 			_queries.Clear();
-			_queries.Add(ParamID, _accountInfo.ID);
+			_queries.Add(ParamID, _clientInfo.ID);
 			_queries.Add(ParamPW, password);
 			var postData = _queries.BuildPostData();
 			string url = base.BaseAddress + LogInUrl;
@@ -56,12 +58,12 @@ namespace GersangLauncher.Models.GameManager
 			await _tcs.Task;
 
 			if (_webBrowser.DocumentText.ToLower().Contains("otp"))
-				return (LogInResult.RequireOtp, string.Empty);
+				return new LogInResult(LogInResultType.RequireOtp);
 			else
-				return (LogInResult.Fail, string.Empty);
+				return new LogInResult(LogInResultType.Fail);
 		}
 
-		public override async Task<(OtpResult result, string message)> InputOtp(string otp)
+		protected override async Task<OtpResult> InputOtp(string otp)
 		{
 			if (_webBrowser.ReadyState != WebBrowserReadyState.Complete)
 				await _tcs.Task;
@@ -77,28 +79,44 @@ namespace GersangLauncher.Models.GameManager
 			await _tcs.Task;
 
 			if (_webBrowser.Url.OriginalString.ToLower().Contains("otp"))
-				return (OtpResult.Fail, string.Empty);
+				return new OtpResult(OtpResultType.Fail);
 			else
 			{
 				_queries.Clear();
-				return (OtpResult.Success, string.Empty);
+				return new OtpResult(OtpResultType.Success);
 			}
 		}
 
-		public override async Task GameStart()
+		protected override async Task GameStart()
 		{
 			// js injection
 			HtmlDocument _doc = _webBrowser.Document;
 			HtmlElement head = _doc.GetElementsByTagName("head")[0];
 			HtmlElement script = _doc.CreateElement("script");
-			script.SetAttribute("text", "function openStarter() { self.location.href='Gersang:'; \n startRetry = setTimeout(\"socketStart('main')\", 2000); }");
+			var serverType = _clientInfo.ServerType switch
+			{
+				ServerType.Main => "main",
+				ServerType.Test => "test",
+				_ => "main"
+			};
+			script.SetAttribute("text", $"function openStarter() {{ self.location.href='Gersang:'; \n startRetry = setTimeout(\"socketStart('{serverType}')\", 2000); }}");
 			head.AppendChild(script);
 			_webBrowser.Document.InvokeScript("openStarter");
 		}
 
-		public override async Task LogOut()
+		protected override async Task<bool> CheckLogIn()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		protected override async Task LogOut()
 		{
 			_webBrowser.Navigate(base.BaseAddress + LogOutUrl);
+		}
+
+		protected override Task<bool> GetSearchReward()
+		{
+			throw new System.NotImplementedException();
 		}
 	}
 }

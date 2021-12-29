@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 
-namespace GersangLauncher.Models.Service
+namespace GersangGameManager.Service
 {
 	internal class HttpContentBuilder
 	{

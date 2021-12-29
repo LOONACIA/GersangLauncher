@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GersangLauncher", "GersangLauncher\GersangLauncher.csproj", "{A6C45BA7-441F-45E5-9416-290802C6F1FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GersangLauncher", "GersangLauncher\GersangLauncher.csproj", "{A6C45BA7-441F-45E5-9416-290802C6F1FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GersangGameManager", "GersangGameManager\GersangGameManager.csproj", "{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6C45BA7-441F-45E5-9416-290802C6F1FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
