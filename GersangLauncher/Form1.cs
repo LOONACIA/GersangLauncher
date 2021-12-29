@@ -131,6 +131,7 @@ namespace GersangLauncher
 				var loginResult = await _gameManager.LogIn(clientInfo, x => CryptoFactory.Unprotect(x, _entropy), ignoreAleadyStarted);
 				string message = string.Empty;
 				var ret = false;
+				OtpResult otpResult = new(OtpResultType.Fail);
 				switch (loginResult.Type)
 				{
 					case LogInResultType.Success:
@@ -142,13 +143,14 @@ namespace GersangLauncher
 					case LogInResultType.RequireOtp:
 						FormInputText form = new();
 						form.Text = "OTP 입력";
-						OtpResult otpResult;
 						do
 						{
 							var dialogResult = form.ShowDialog();
 							if (dialogResult != DialogResult.OK)
 								break;
 							otpResult = await _gameManager.InputOTP(form.InputValue);
+							if (!string.IsNullOrEmpty(otpResult.Message))
+								MessageBox.Show(otpResult.Message);
 						} while (otpResult.Type != OtpResultType.Success);
 						form.Dispose();
 						break;
@@ -159,7 +161,8 @@ namespace GersangLauncher
 
 						return await TryLogIn(clientInfo, true);
 				}
-				return loginResult.Type == LogInResultType.Success;
+				return (loginResult.Type == LogInResultType.Success) ||
+					(loginResult.Type == LogInResultType.RequireOtp && otpResult.Type == OtpResultType.Success);
 			}
 			catch (Exception ex)
 			{
