@@ -112,6 +112,8 @@ namespace GersangGameManager
 					registryKey.Close();
 				}
 			}
+
+			_handler.ChangeClientPath(newInstallPath);
 		}
 
 		public async Task<int> GetCurrentVersion(ServerType serverType)
@@ -121,7 +123,7 @@ namespace GersangGameManager
 
 		public int CheckLocalVersion(string installPath)
 		{
-			return _patcher.CheckLocalVersion(installPath);
+			return _patcher.GetLocalVersion(installPath);
 		}
 
 		public async Task CheckUpdate(string installPath, ServerType serverType)

@@ -22,6 +22,12 @@ namespace GersangGameManager.PatchManager
 				_patchList.Add(item);
 		}
 
+		public void AddRange(IEnumerable<PatchInfo> items)
+		{
+			foreach (var item in items)
+				Add(item);
+		}
+
 		public void Clear() => _patchList.Clear();
 
 		public bool Contains(PatchInfo item) => _patchList.Contains(item);

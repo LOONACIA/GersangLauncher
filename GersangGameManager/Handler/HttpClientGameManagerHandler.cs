@@ -52,9 +52,6 @@ namespace GersangGameManager.Handler
 
 		protected override async Task<OtpResult> InputOtp(string otp)
 		{
-			if (string.IsNullOrEmpty(otp))
-				throw new ArgumentNullException(nameof(otp));
-
 			_builder.Add(ParamOTP, otp);
 			var content = _builder.Build(ContentType.FormData);
 
@@ -154,7 +151,7 @@ namespace GersangGameManager.Handler
 			}
 			if (string.IsNullOrEmpty(path))
 			{
-				throw new InvalidOperationException("거상 게임 스타터 설치 후 다시 실행해 주세요.");
+				throw new GameManagerException("거상 게임 스타터 설치 후 다시 실행해 주세요.");
 			}
 
 			Process process = new Process();

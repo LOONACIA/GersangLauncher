@@ -38,6 +38,16 @@ namespace GersangGameManager.Handler
 			_clientInfo = clientInfo;
 		}
 
+		void IGameManagerHandler.ChangeClientPath(string clientPath)
+		{
+			ChangeClientPath(clientPath);
+		}
+
+		protected virtual void ChangeClientPath(string clientPath)
+		{
+			_clientInfo.ClientPath = clientPath;
+		}
+
 		Task<LogInResult> IGameManagerHandler.LogIn(DecryptDelegate decryptor)
 		{
 			return LogIn(decryptor);
@@ -46,6 +56,9 @@ namespace GersangGameManager.Handler
 
 		Task<OtpResult> IGameManagerHandler.InputOtp(string otp)
 		{
+			if (string.IsNullOrEmpty(otp))
+				throw new GameManagerException("OTP를 입력해 주세요.");
+
 			return InputOtp(otp);
 		}
 		protected abstract Task<OtpResult> InputOtp(string otp);
@@ -58,6 +71,10 @@ namespace GersangGameManager.Handler
 
 		Task IGameManagerHandler.GameStart()
 		{
+			var runFile = System.IO.Path.Combine(_clientInfo.ClientPath, "run.exe");
+			if (!System.IO.File.Exists(runFile))
+				throw new GameManagerException($"{_clientInfo.ClientPath}에 거상 실행 파일이 없습니다. 설치 여부를 다시 확인해 주세요.");
+
 			return GameStart();
 		}
 		protected abstract Task GameStart();

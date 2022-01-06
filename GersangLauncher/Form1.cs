@@ -23,7 +23,7 @@ namespace GersangLauncher
 		{
 			OpenConfig();
 			_entropy = null;
-
+			
 			InitializeComponent();
 
 			InitializeGameManager();
@@ -180,8 +180,15 @@ namespace GersangLauncher
 
 		private async void ClientInfoUserControl_StartBtnClicked(object? sender, EventArgs e)
 		{
-			await _gameManager.GameStart();
-			SetStatusStrip(sender, "게임 실행");
+			try
+			{
+				await _gameManager.GameStart();
+				SetStatusStrip(sender, "게임 실행");
+			}
+			catch (GameManagerException ex)
+			{
+				MessageBox.Show(ex.Message);
+			}
 		}
 
 		private async void ClientInfoUserControl_SearchBtnClicked(object? sender, ClientInfo e)
@@ -260,7 +267,7 @@ namespace GersangLauncher
 				_config.Save(configFilePath);
 		}
 
-		private async void Form1_Shown(object sender, EventArgs e)
+		private void Form1_Shown(object sender, EventArgs e)
 		{
 			while (_config.UseUserCredential)
 			{
