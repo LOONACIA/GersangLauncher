@@ -145,9 +145,14 @@ namespace GersangGameManager
 			{
 				_patcher = new Patcher();
 			}
-
+			_patcher.BackUpDirectoryName = DateTime.Now.ToString("MM월 dd일 HH시 mm분 ss초");
 			_patcher.Configure(installPath, serverType);
 			return await _patcher.Update(progressHandler, cancellationToken);
+		}
+
+		public async Task ClearTempDirectory()
+		{
+			_patcher?.ClearTempDirectory();
 		}
 	}
 }

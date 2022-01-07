@@ -265,6 +265,8 @@ namespace GersangLauncher
 		{
 			if (_config is not null)
 				_config.Save(configFilePath);
+
+			_gameManager?.ClearTempDirectory();
 		}
 
 		private void Form1_Shown(object sender, EventArgs e)

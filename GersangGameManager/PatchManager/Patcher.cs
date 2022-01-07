@@ -26,6 +26,13 @@ namespace GersangGameManager.PatchManager
 		private const string TempInfoFolder = ".\\temp_info\\";
 		private const string TempPatchFolder = ".\\temp_patch\\";
 
+		private string _backUpDirectoryName;
+		internal string BackUpDirectoryName
+		{
+			get => _backUpDirectoryName;
+			set => _backUpDirectoryName = value;
+		}
+
 		private string[] _patchNote;
 
 		private volatile int _completed = 0;
@@ -87,8 +94,6 @@ namespace GersangGameManager.PatchManager
 				return true;
 			}
 
-			ClearTempDirectory();
-
 			var versionList = await GetVersionList(patchNote);
 			versionList = versionList.Where(x => x > localVersion).ToArray();
 
@@ -119,8 +124,11 @@ namespace GersangGameManager.PatchManager
 					progressHandler.Report(args);
 				});
 			}
-			FileService.CopyAll(TempPatchFolder, _installPath, copyProgress);
-			ClearTempDirectory();
+			var backUpPath = Path.GetFullPath(".\\백업_" + _backUpDirectoryName);
+			if(Directory.Exists(backUpPath))
+				Directory.Delete(backUpPath, true);
+
+			FileService.CopyAll(TempPatchFolder, _installPath, backUpPath, copyProgress);
 
 			return true;
 		}
@@ -138,11 +146,14 @@ namespace GersangGameManager.PatchManager
 				progressHandler?.Report(args);
 			}
 
-			var downloadInfoTasks = versionList.Select(rev =>
-			{
-				var url = _serverFolder + InfoFolder + rev;
-				return _httpService.DownloadAsync(url, fullPath + rev);
-			});
+			var downloadInfoTasks = versionList
+				.Where(rev => !File.Exists(fullPath + rev))
+				.Select(rev =>
+				{
+					var url = _serverFolder + InfoFolder + rev;
+					var infoFileFullPath = fullPath + rev;
+					return _httpService.DownloadAsync(url, fullPath + rev);
+				});
 			await Task.WhenAll(downloadInfoTasks);
 
 			if (!skipReport)
@@ -152,7 +163,7 @@ namespace GersangGameManager.PatchManager
 			}
 		}
 
-		private void ClearTempDirectory()
+		internal void ClearTempDirectory()
 		{
 			if (Directory.Exists(TempInfoFolder))
 				Directory.Delete(TempInfoFolder, true);
@@ -253,6 +264,16 @@ namespace GersangGameManager.PatchManager
 
 			var path = patchInfo.FilePath.Replace("\\", "/");
 			var zipPath = Path.Combine(downloadPath, patchInfo.FileName);
+
+			var file = Path.Combine(downloadPath, Path.GetFileNameWithoutExtension(patchInfo.FileName));
+			if (File.Exists(file))
+			{
+				args.DownloadProgress = 1;
+				progressHandler?.Report(args);
+				semaphore.Release();
+				return;
+			}
+
 			var url = _serverFolder + PatchFolder + path + patchInfo.FileName;
 			await _httpService.DownloadAsync(url, zipPath, downloadProgress, cancellationToken);
 
@@ -339,6 +360,9 @@ namespace GersangGameManager.PatchManager
 
 		internal async Task<string[]> GetPatchNote(IProgress<UpdateProgressEventArgs> progressHandler)
 		{
+			if (_patchNote != null)
+				return _patchNote;
+
 			var skipReport = progressHandler is null;
 			var args = new UpdateProgressEventArgs();
 			if (!skipReport)
@@ -357,8 +381,9 @@ namespace GersangGameManager.PatchManager
 				args.Percentage = 100;
 				progressHandler?.Report(args);
 			}
+			_patchNote = Regex.Split(patchNote, "\r\n|\r|\n");
 
-			return Regex.Split(patchNote, "\r\n|\r|\n");
+			return _patchNote;
 		}
 
 		private async Task<int[]> GetVersionList(string[] patchNote = null, IProgress<UpdateProgressEventArgs> progressHandler = null)
