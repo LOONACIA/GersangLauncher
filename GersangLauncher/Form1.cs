@@ -153,7 +153,7 @@ namespace GersangLauncher
 						form.Dispose();
 						break;
 					case LogInResultType.StartedClient:
-						var result = MessageBox.Show("게임에 접속 중인 계정으로 재로그인 할 경우 게임이 종료될 수 있습니다. 계속 진행하시겠습니까?");
+						var result = MessageBox.Show("게임에 접속 중인 계정으로 재로그인 할 경우 게임이 종료될 수 있습니다. 계속 진행하시겠습니까?", "경고", MessageBoxButtons.YesNo);
 						if (result != DialogResult.OK)
 							break;
 
@@ -210,6 +210,8 @@ namespace GersangLauncher
 				{
 					searchResult = await _gameManager.GetSearchReward();
 				}
+				else
+					searchResult = false;
 			}
 
 			var message = searchResult.Value ? "검색 보상 수령 완료" : "검색 보상 수령 실패";
