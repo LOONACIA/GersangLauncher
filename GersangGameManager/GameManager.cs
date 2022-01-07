@@ -22,6 +22,7 @@ namespace GersangGameManager
 			_handler = handler;
 			_patcher = new Patcher();
 			_runningClientList = new Dictionary<string, bool>();
+			_patcher?.ClearTempDirectory();
 		}
 
 		public async Task<LogInResult> LogIn(ClientInfo clientInfo, DecryptDelegate decryptor, bool ignoreAleadyStarted)
@@ -76,17 +77,18 @@ namespace GersangGameManager
 			return otpResult;
 		}
 
-		public async Task GameStart()
+		public async Task<bool> GameStart()
 		{
 			_isLoginSucceed = await _handler.CheckLogIn();
 			if (!_isLoginSucceed)
-				return;
+				return false;
 
 			await _handler.GameStart();
 			_runningClientList[_currentLogInAccount] = true;
 
 			_currentLogInAccount = string.Empty;
 			_handler.LogOut();
+			return true;
 		}
 
 		public async Task<bool?> GetSearchReward()

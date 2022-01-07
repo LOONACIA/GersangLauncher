@@ -178,12 +178,21 @@ namespace GersangLauncher
 			SetStatusStrip(sender, message);
 		}
 
-		private async void ClientInfoUserControl_StartBtnClicked(object? sender, EventArgs e)
+		private async void ClientInfoUserControl_StartBtnClicked(object? sender, ClientInfo e)
 		{
 			try
 			{
-				await _gameManager.GameStart();
-				SetStatusStrip(sender, "게임 실행");
+				var result = await _gameManager.GameStart();
+				if(!result)
+				{
+					var loginResult = await TryLogIn(e, false);
+					if(loginResult)
+					{
+						result = await _gameManager.GameStart();
+					}
+				}
+				if(result)
+					SetStatusStrip(sender, "게임 실행");
 			}
 			catch (GameManagerException ex)
 			{

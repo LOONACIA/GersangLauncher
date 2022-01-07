@@ -71,6 +71,11 @@ namespace GersangGameManager.Handler
 
 		protected override async Task<bool> CheckLogIn()
 		{
+			if(_httpService is null)
+			{
+				_httpService = new HttpService();
+				_httpService.BaseAddress = base.BaseAddress;
+			}
 			await Task.Yield();
 			return !string.IsNullOrEmpty(_httpService.GetCookie("memberID"));
 		}

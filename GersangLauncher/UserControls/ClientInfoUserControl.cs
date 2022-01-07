@@ -65,7 +65,7 @@ namespace GersangLauncher.UserControls
 		public event EventHandler<ClientInfo>? SaveBtnClicked;
 		public event EventHandler<ClientInfo>? LogInBtnClicked;
 		public event EventHandler<string>? InstallPathChanged;
-		public event EventHandler? StartBtnClicked;
+		public event EventHandler<ClientInfo>? StartBtnClicked;
 		public event EventHandler<ClientInfo>? SearchBtnClicked;
 		public event EventHandler<ClientInfo>? PatchBtnClicked;
 
@@ -162,7 +162,7 @@ namespace GersangLauncher.UserControls
 
 		private void OnStartBtnClicked()
 		{
-			StartBtnClicked?.Invoke(this, EventArgs.Empty);
+			StartBtnClicked?.Invoke(this, BuildClientInfo());
 		}
 
 		private void OnSearchBtnClicked()
