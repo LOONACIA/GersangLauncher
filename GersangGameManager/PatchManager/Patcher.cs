@@ -360,9 +360,6 @@ namespace GersangGameManager.PatchManager
 
 		internal async Task<string[]> GetPatchNote(IProgress<UpdateProgressEventArgs> progressHandler)
 		{
-			if (_patchNote != null)
-				return _patchNote;
-
 			var skipReport = progressHandler is null;
 			var args = new UpdateProgressEventArgs();
 			if (!skipReport)
@@ -381,9 +378,8 @@ namespace GersangGameManager.PatchManager
 				args.Percentage = 100;
 				progressHandler?.Report(args);
 			}
-			_patchNote = Regex.Split(patchNote, "\r\n|\r|\n");
 
-			return _patchNote;
+			return Regex.Split(patchNote, "\r\n|\r|\n");
 		}
 
 		private async Task<int[]> GetVersionList(string[] patchNote = null, IProgress<UpdateProgressEventArgs> progressHandler = null)
