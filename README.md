@@ -1,6 +1,6 @@
 # GersangLauncher
   
-[다운로드](https://github.com/LOONACIA/GersangLauncher/releases/)  
+~~[다운로드](https://github.com/LOONACIA/GersangLauncher/releases/)~~  
   
 ~~프로그램 사용으로 인한 책임은 전적으로 프로그램 사용자에게 있습니다.~~  
   
