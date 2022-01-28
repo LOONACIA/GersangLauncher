@@ -22,9 +22,7 @@ namespace GersangGameManager.Service
 			{
 				var fullPath = Path.Combine(destination.FullName, fi.Name);
 
-				var destFi = new FileInfo(fullPath);
-				var isSymbolicLink = destFi.Attributes.HasFlag(FileAttributes.ReparsePoint);
-				if (!isSymbolicLink)
+				if (!IsSymbolicLink(fullPath))
 				{
 					if (backUpPath != null)
 					{
@@ -61,6 +59,17 @@ namespace GersangGameManager.Service
 			var targetDi = new DirectoryInfo(target);
 			var backUpDi = string.IsNullOrEmpty(backUpPath) ? null : new DirectoryInfo(backUpPath);
 			CopyAll(sourceDi, targetDi, backUpDi, progressHandler);
+		}
+
+		private static bool IsSymbolicLink(string filePath)
+		{
+			if (File.Exists(filePath))
+			{
+				var destFi = new FileInfo(filePath);
+				return destFi.Attributes.HasFlag(FileAttributes.ReparsePoint);
+			}
+			else
+				return false;
 		}
 	}
 }
