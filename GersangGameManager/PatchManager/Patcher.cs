@@ -396,7 +396,7 @@ namespace GersangGameManager.PatchManager
 				progressHandler?.Report(args);
 			}
 
-			var regex_Find_Rev = new Regex(@"\[거상\s+패치\s+V(\d+)\]");
+			var regex_Find_Rev = new Regex(@"\[거상\s+패치\s+(?:V|v)\.?(\d+)\]");
 
 			if (!skipReport)
 			{
