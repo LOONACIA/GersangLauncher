@@ -54,9 +54,6 @@ namespace GersangGameManager.PatchManager
 
 		public void Configure(string installPath, ServerType serverType)
 		{
-			if (string.IsNullOrEmpty(installPath))
-				throw new ArgumentNullException(nameof(installPath));
-
 			this._installPath = installPath;
 			this._serverType = serverType;
 			SetServerFolder(this._serverType);
@@ -234,6 +231,7 @@ namespace GersangGameManager.PatchManager
 			int max = 6;
 			using (var semaphore = new SemaphoreSlim(max, max))
 			{
+				Debug.WriteLine(patchList.Count);
 				foreach (var patchInfo in patchList)
 				{
 					await semaphore.WaitAsync().ConfigureAwait(false);

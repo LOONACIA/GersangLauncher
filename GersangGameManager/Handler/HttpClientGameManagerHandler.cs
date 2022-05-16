@@ -185,10 +185,11 @@ namespace GersangGameManager.Handler
 			if (this._websocketService?.IsDisConnected ?? false)
 				return;
 
-			string path = string.Empty;
 			using var registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command");
 			if (registryKey is null)
-				throw new InvalidOperationException("스타터가 설치되어 있지 않습니다.");
+				throw new GameManagerException("스타터가 설치되어 있지 않습니다.");
+
+			string path = registryKey.GetValue("", true)?.ToString() ?? throw new GameManagerException("스타터에서 설치 경로를 추출할 수 없습니다.");
 
 			Process process = new Process();
 			Environment.GetFolderPath(Environment.SpecialFolder.Personal);

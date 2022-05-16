@@ -223,6 +223,7 @@ namespace GersangLauncher
 		{
 			var frmPatch = new FormPatch(this._gameManager, e.ClientPath, e.ServerType);
 			frmPatch.ShowDialog();
+			CheckUpdate(sender as ClientInfoUserControl, e);
 		}
 
 		private int GetIndexOfClientInfoControl(object? sender) => (sender as ClientInfoUserControl).Index;
