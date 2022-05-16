@@ -10,29 +10,29 @@ namespace GersangLauncher.UserControls
 		private int _index;
 		public int Index
 		{
-			get => _index;
+			get => this._index;
 			set
 			{
-				_index = value;
-				BtnSave.Text = $"{_index + 1}번";
+				this._index = value;
+				BtnSave.Text = $"{this._index + 1}번";
 			}
 		}
 
 		private bool _hideServerPanel;
 		public bool HideServerPanel
 		{
-			get => _hideServerPanel;
+			get => this._hideServerPanel;
 			set
 			{
-				if (_hideServerPanel == value)
+				if (this._hideServerPanel == value)
 					return;
 
-				_hideServerPanel = value;
+				this._hideServerPanel = value;
 				var colBtnFindPath = TablePanelMain.GetColumn(BtnFindGamePath);
 				var colSpanBtnFindPath = TablePanelMain.GetColumnSpan(BtnFindGamePath);
 				var colTBFindPath = TablePanelMain.GetColumn(TextBoxGamePath);
 				var colSpanTBFindPath = TablePanelMain.GetColumnSpan(TextBoxGamePath);
-				if (_hideServerPanel)
+				if (this._hideServerPanel)
 				{
 					RBIsMain.Checked = true;
 					PanelServerType.Visible = false;
@@ -185,7 +185,7 @@ namespace GersangLauncher.UserControls
 		{
 			if (isPasswordChanged)
 			{
-				TextBoxPW.Text = CryptoFactory.Protect(TextBoxPW.Text, Form1._entropy);
+				TextBoxPW.Text = CryptoFactory.Protect(TextBoxPW.Text, Form1.Entropy);
 			}
 			isPasswordChanged = false;
 		}

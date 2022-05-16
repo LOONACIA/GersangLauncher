@@ -5,7 +5,14 @@ VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GersangLauncher", "GersangLauncher\GersangLauncher.csproj", "{A6C45BA7-441F-45E5-9416-290802C6F1FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GersangGameManager", "GersangGameManager\GersangGameManager.csproj", "{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GersangGameManager", "GersangGameManager\GersangGameManager.csproj", "{AAC645A4-8CFE-4278-BACE-7A3B1783C90C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DA2DB3C5-77F4-448F-9353-D716699A523B}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.txt = LICENSE.txt
+		README.md = README.md
+		THIRD-PARTY-NOTICES.md = THIRD-PARTY-NOTICES.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

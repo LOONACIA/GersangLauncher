@@ -10,9 +10,12 @@ namespace GersangLauncher.Models
 	{
 		[JsonPropertyName("Account")]
 		public List<ClientInfo> ClientList { get; set; }
+
 		[JsonPropertyName("Type")]
 		public HandlerType HandlerType { get; set; }
+
 		public bool SavePassword { get; set; } = true;
+
 		[JsonPropertyName("UserCredential")]
 		public bool UseUserCredential { get; set; } = true;
 

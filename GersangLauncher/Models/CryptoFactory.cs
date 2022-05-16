@@ -4,9 +4,10 @@ using System.Text;
 
 namespace GersangLauncher.Models
 {
+#pragma warning disable CA1416
 	public static class CryptoFactory
 	{
-		public static string Protect(string plainText, string entropy = null)
+		public static string Protect(string plainText, string? entropy = null)
 		{
 			return Convert.ToBase64String(
 				ProtectedData.Protect(
@@ -15,7 +16,7 @@ namespace GersangLauncher.Models
 					DataProtectionScope.CurrentUser));
 		}
 
-		public static string Unprotect(string cipherText, string entropy = null)
+		public static string Unprotect(string cipherText, string? entropy = null)
 		{
 			return Encoding.UTF8.GetString(
 				ProtectedData.Unprotect(
@@ -24,4 +25,5 @@ namespace GersangLauncher.Models
 					DataProtectionScope.CurrentUser));
 		}
 	}
+#pragma warning restore
 }

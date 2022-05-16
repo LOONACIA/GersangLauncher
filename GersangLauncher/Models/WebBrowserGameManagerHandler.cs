@@ -24,22 +24,22 @@ namespace GersangLauncher.Models
 		protected override void Configure(ClientInfo clientInfo)
 		{
 			base.Configure(clientInfo);
-			_tcs = new TaskCompletionSource<bool>();
-			if (_webBrowser != null)
+			this._tcs = new TaskCompletionSource<bool>();
+			if (this._webBrowser != null)
 			{
-				_webBrowser.Dispose();
-				_webBrowser = null;
+				this._webBrowser.Dispose();
+				this._webBrowser = null;
 			}
-			_webBrowser = new WebBrowser();
-			_webBrowser.ScrollBarsEnabled = false;
-			_webBrowser.ScriptErrorsSuppressed = true;
-			_webBrowser.Navigated += (s, e) =>
+			this._webBrowser = new WebBrowser();
+			this._webBrowser.ScrollBarsEnabled = false;
+			this._webBrowser.ScriptErrorsSuppressed = true;
+			this._webBrowser.Navigated += (s, e) =>
 			{
-				if (_tcs.Task.IsCompleted)
+				if (this._tcs.Task.IsCompleted)
 					return;
-				_tcs.SetResult(true);
+				this._tcs.SetResult(true);
 			};
-			_queries = new List<KeyValuePair<string, string>>();
+			this._queries = new List<KeyValuePair<string, string>>();
 
 			InternetSetCookie(base.BaseAddress, "passwdChange", "checked");
 			InternetSetCookie(base.BaseAddress, "EventNotToday", "Y");
@@ -47,17 +47,17 @@ namespace GersangLauncher.Models
 
 		protected override async Task<LogInResult> LogIn(DecryptDelegate decryptor)
 		{
-			var password = decryptor(_clientInfo.EncryptedPassword);
-			_queries.Clear();
-			_queries.Add(ParamID, _clientInfo.ID);
-			_queries.Add(ParamPW, password);
-			var postData = _queries.BuildPostData();
+			var password = decryptor(this._clientInfo.EncryptedPassword);
+			this._queries.Clear();
+			this._queries.Add(ParamID, this._clientInfo.ID);
+			this._queries.Add(ParamPW, password);
+			var postData = this._queries.BuildPostData();
 			string url = base.BaseAddress + LogInUrl;
 
-			_webBrowser.Navigate(url, string.Empty, postData, ContentType);
-			await _tcs.Task;
+			this._webBrowser.Navigate(url, string.Empty, postData, ContentType);
+			await this._tcs.Task;
 
-			if (_webBrowser.DocumentText.ToLower().Contains("otp"))
+			if (this._webBrowser.DocumentText.ToLower().Contains("otp"))
 				return new LogInResult(LogInResultType.RequireOtp);
 			else
 				return new LogInResult(LogInResultType.Fail);
@@ -65,24 +65,24 @@ namespace GersangLauncher.Models
 
 		protected override async Task<OtpResult> InputOtp(string otp)
 		{
-			if (_webBrowser.ReadyState != WebBrowserReadyState.Complete)
-				await _tcs.Task;
+			if (this._webBrowser.ReadyState != WebBrowserReadyState.Complete)
+				await this._tcs.Task;
 
-			_queries.Add(ParamOTP, otp);
+			this._queries.Add(ParamOTP, otp);
 			var uri = new System.Uri(base.BaseAddress);
 			var returnUrl = uri.Host + uri.PathAndQuery + IndexUrl;
-			_queries.Add(ParamReturnUrl, returnUrl);
-			var postData = _queries.BuildPostData();
-			string url = base.BaseAddress + OtpUrl;
+			this._queries.Add(ParamReturnUrl, returnUrl);
+			var postData = this._queries.BuildPostData();
+			string url = base.BaseAddress + OtpProcUrl;
 
-			_webBrowser.Navigate(url, string.Empty, postData, ContentType);
-			await _tcs.Task;
+			this._webBrowser.Navigate(url, string.Empty, postData, ContentType);
+			await this._tcs.Task;
 
-			if (_webBrowser.Url.OriginalString.ToLower().Contains("otp"))
+			if (this._webBrowser.Url.OriginalString.ToLower().Contains("otp"))
 				return new OtpResult(OtpResultType.Fail);
 			else
 			{
-				_queries.Clear();
+				this._queries.Clear();
 				return new OtpResult(OtpResultType.Success);
 			}
 		}
@@ -90,10 +90,10 @@ namespace GersangLauncher.Models
 		protected override async Task GameStart()
 		{
 			// js injection
-			HtmlDocument _doc = _webBrowser.Document;
+			HtmlDocument _doc = this._webBrowser.Document;
 			HtmlElement head = _doc.GetElementsByTagName("head")[0];
 			HtmlElement script = _doc.CreateElement("script");
-			var serverType = _clientInfo.ServerType switch
+			var serverType = this._clientInfo.ServerType switch
 			{
 				ServerType.Main => "main",
 				ServerType.Test => "test",
@@ -101,7 +101,7 @@ namespace GersangLauncher.Models
 			};
 			script.SetAttribute("text", $"function openStarter() {{ self.location.href='Gersang:'; \n startRetry = setTimeout(\"socketStart('{serverType}')\", 2000); }}");
 			head.AppendChild(script);
-			_webBrowser.Document.InvokeScript("openStarter");
+			this._webBrowser.Document.InvokeScript("openStarter");
 		}
 
 		protected override async Task<bool> CheckLogIn()
@@ -111,7 +111,7 @@ namespace GersangLauncher.Models
 
 		protected override async Task LogOut()
 		{
-			_webBrowser.Navigate(base.BaseAddress + LogOutUrl);
+			this._webBrowser.Navigate(base.BaseAddress + LogOutUrl);
 		}
 
 		protected override Task<bool> GetSearchReward()

@@ -14,40 +14,35 @@ namespace GersangLauncher
 		private GameManager _gameManager;
 		private UserConfig _config;
 		private const string configFilePath = ".\\config.json";
-		internal static string? _entropy;
+		internal static string? Entropy;
 
 		private int _currentMainVersion = -1;
 		private int _currentTestVersion = -1;
 
 		public Form1()
 		{
-			OpenConfig();
-			_entropy = null;
+			this._config = UserConfig.Open(configFilePath);
+			Entropy = null;
 			
 			InitializeComponent();
 
-			InitializeGameManager();
+			this._gameManager = InitializeGameManager();
 
-			for (int index = 0; index < _config.ClientList.Count; ++index)
+			for (int index = 0; index < this._config.ClientList.Count; ++index)
 			{
 				AddClientInfoControl();
 			}
 		}
 
-		private void OpenConfig()
+		private GameManager InitializeGameManager()
 		{
-			_config = UserConfig.Open(configFilePath);
-		}
-
-		private void InitializeGameManager()
-		{
-			IGameManagerHandler handler = _config.HandlerType switch
+			IGameManagerHandler handler = this._config.HandlerType switch
 			{
 				HandlerType.HTTP => new HttpClientGameManagerHandler(),
 				HandlerType.Browser => new WebBrowserGameManagerHandler(),
 				_ => new HttpClientGameManagerHandler()
 			};
-			_gameManager = new GameManager(handler);
+			return new GameManager(handler);
 		}
 
 		private void AddClientInfoControl()
@@ -59,14 +54,14 @@ namespace GersangLauncher
 				return;
 			}
 
-			while (_config.ClientList.Count <= index)
-				_config.ClientList.Add(new ClientInfo());
+			while (this._config.ClientList.Count <= index)
+				this._config.ClientList.Add(new ClientInfo());
 
-			ClientInfo clientInfo = _config.ClientList[index] ?? (_config.ClientList[index] = new ClientInfo());
+			ClientInfo clientInfo = this._config.ClientList[index] ?? (this._config.ClientList[index] = new ClientInfo());
 			ClientInfoUserControl clientInfoUserControl = new ClientInfoUserControl(clientInfo, index);
-			clientInfoUserControl.HideServerPanel = _config.HideServerPanel;
+			clientInfoUserControl.HideServerPanel = this._config.HideServerPanel;
 			
-			if (_config.HideServerPanel)
+			if (this._config.HideServerPanel)
 				clientInfo.ServerType = ServerType.Main;
 
 			if (!string.IsNullOrEmpty(clientInfo.ClientPath))
@@ -84,13 +79,13 @@ namespace GersangLauncher
 
 		private async Task CheckUpdate(ClientInfoUserControl clientInfoUserControl, ClientInfo clientInfo)
 		{
-			if(_currentMainVersion == -1)
-				_currentMainVersion = await _gameManager.GetCurrentVersion(ServerType.Main);
-			if(_currentTestVersion == -1)
-				_currentTestVersion = await _gameManager.GetCurrentVersion(ServerType.Test);
+			if(this._currentMainVersion == -1)
+				this._currentMainVersion = await this._gameManager.GetCurrentVersion(ServerType.Main);
+			if(this._currentTestVersion == -1)
+				this._currentTestVersion = await this._gameManager.GetCurrentVersion(ServerType.Test);
 
-			var localVersion = _gameManager.CheckLocalVersion(clientInfo.ClientPath);
-			var currentVersion = clientInfo.ServerType == ServerType.Main ? _currentMainVersion : _currentTestVersion;
+			var localVersion = this._gameManager?.CheckLocalVersion(clientInfo.ClientPath);
+			var currentVersion = clientInfo.ServerType == ServerType.Main ? this._currentMainVersion : this._currentTestVersion;
 			clientInfoUserControl.IsNeedToUpdate = localVersion != -1 && localVersion < currentVersion;
 		}
 
@@ -103,32 +98,31 @@ namespace GersangLauncher
 				return;
 			}
 			ClientListPanel.Controls.Remove(list[^1]);
-			_config.ClientList.Remove(_config.ClientList[^1]);
+			this._config.ClientList.Remove(this._config.ClientList[^1]);
 		}
 
 		private void ClientInfoUserControl_SaveBtnClicked(object? sender, ClientInfo e)
 		{
 			var index = GetIndexOfClientInfoControl(sender);
-			_config.ClientList[index] = e;
-			_config.Save(configFilePath);
-			CheckUpdate(sender as ClientInfoUserControl, _config.ClientList[index]);
+			this._config.ClientList[index] = e;
+			this._config.Save(configFilePath);
+			CheckUpdate(sender as ClientInfoUserControl, this._config.ClientList[index]);
 		}
 
 		private void ClientInfoUserControl_InstallPathChanged(object? sender, string e)
 		{
 			var index = GetIndexOfClientInfoControl(sender);
-			_config.ClientList[index].ClientPath = e;
-			_gameManager.ChangeInstallPath(e);
-			CheckUpdate(sender as ClientInfoUserControl, _config.ClientList[index]);
+			this._config.ClientList[index].ClientPath = e;
+			this._gameManager.ChangeInstallPath(e);
+			CheckUpdate(sender as ClientInfoUserControl, this._config.ClientList[index]);
 		}
 
 		private async Task<bool> TryLogIn(ClientInfo clientInfo, bool ignoreAleadyStarted)
 		{
 			try
 			{
-				var loginResult = await _gameManager.LogIn(clientInfo, x => CryptoFactory.Unprotect(x, _entropy), ignoreAleadyStarted);
+				var loginResult = await this._gameManager.LogIn(clientInfo, x => CryptoFactory.Unprotect(x, Entropy), ignoreAleadyStarted);
 				string message = string.Empty;
-				var ret = false;
 				OtpResult otpResult = new(OtpResultType.Fail);
 				switch (loginResult.Type)
 				{
@@ -146,7 +140,14 @@ namespace GersangLauncher
 							var dialogResult = form.ShowDialog();
 							if (dialogResult != DialogResult.OK)
 								break;
-							otpResult = await _gameManager.InputOTP(form.InputValue);
+							otpResult = await this._gameManager.InputOTP(form.InputValue);
+
+							if(otpResult.Type == OtpResultType.Error)
+							{
+								MessageBox.Show("확인되지 않은 오류 발생. 다시 로그인해 주시기 바랍니다.");
+								return false;
+							}
+
 							if (!string.IsNullOrEmpty(otpResult.Message))
 								MessageBox.Show(otpResult.Message);
 						} while (otpResult.Type != OtpResultType.Success);
@@ -182,13 +183,13 @@ namespace GersangLauncher
 		{
 			try
 			{
-				var result = await _gameManager.GameStart();
+				var result = await this._gameManager.GameStart();
 				if(!result)
 				{
 					var loginResult = await TryLogIn(e, false);
 					if(loginResult)
 					{
-						result = await _gameManager.GameStart();
+						result = await this._gameManager.GameStart();
 					}
 				}
 				if(result)
@@ -202,13 +203,13 @@ namespace GersangLauncher
 
 		private async void ClientInfoUserControl_SearchBtnClicked(object? sender, ClientInfo e)
 		{
-			var searchResult = await _gameManager.GetSearchReward();
+			var searchResult = await this._gameManager.GetSearchReward();
 			if (searchResult is null)
 			{
 				var loginResult = await TryLogIn(e, false);
 				if (loginResult)
 				{
-					searchResult = await _gameManager.GetSearchReward();
+					searchResult = await this._gameManager.GetSearchReward();
 				}
 				else
 					searchResult = false;
@@ -220,7 +221,7 @@ namespace GersangLauncher
 
 		private void ClientInfoUserControl_PatchBtnClicked(object? sender, ClientInfo e)
 		{
-			var frmPatch = new FormPatch(_gameManager, e.ClientPath, e.ServerType);
+			var frmPatch = new FormPatch(this._gameManager, e.ClientPath, e.ServerType);
 			frmPatch.ShowDialog();
 		}
 
@@ -243,17 +244,17 @@ namespace GersangLauncher
 
 		private void OpenSettingsTSBtn_Click(object sender, EventArgs e)
 		{
-			bool prev_UseCredential = _config.UseUserCredential;
-			FormSettings frmSettings = new(_config);
+			bool prev_UseCredential = this._config.UseUserCredential;
+			FormSettings frmSettings = new(this._config);
 			frmSettings.ShowDialog();
-			if (prev_UseCredential != _config.UseUserCredential)
+			if (prev_UseCredential != this._config.UseUserCredential)
 			{
 				MessageBox.Show("재시작 후 적용됩니다. 저장된 비밀번호는 초기화됩니다.");
-				_config.ClientList.Where(x => !string.IsNullOrEmpty(x.EncryptedPassword)).ToList().ForEach(x => x.EncryptedPassword = string.Empty);
+				this._config.ClientList.Where(x => !string.IsNullOrEmpty(x.EncryptedPassword)).ToList().ForEach(x => x.EncryptedPassword = string.Empty);
 				Close();
 				return;
 			}
-			ClientListPanel.Controls.OfType<ClientInfoUserControl>().ToList().ForEach(x => x.HideServerPanel = _config.HideServerPanel);
+			ClientListPanel.Controls.OfType<ClientInfoUserControl>().ToList().ForEach(x => x.HideServerPanel = this._config.HideServerPanel);
 		}
 
 		private void AddClientTSBtn_Click(object sender, EventArgs e)
@@ -274,22 +275,24 @@ namespace GersangLauncher
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			if (_config is not null)
-				_config.Save(configFilePath);
+			if (this._config is null)
+				return;
 
-			_gameManager?.ClearTempDirectory();
+			this._config.Save(configFilePath);
+
+			this._gameManager?.ClearTempDirectory();
 		}
 
 		private void Form1_Shown(object sender, EventArgs e)
 		{
-			while (_config.UseUserCredential)
+			while (this._config.UseUserCredential)
 			{
-				_entropy = InputCredential();
+				Entropy = InputCredential();
 
-				if (_entropy is null)
+				if (Entropy is null)
 					break;
 
-				if (!_config.ClientList.Any(x => !string.IsNullOrEmpty(x.EncryptedPassword)))
+				if (!this._config.ClientList.Any(x => !string.IsNullOrEmpty(x.EncryptedPassword)))
 					break;
 
 				if (KeyValidation())
@@ -310,7 +313,7 @@ namespace GersangLauncher
 			bool ret = false;
 			try
 			{
-				_ = CryptoFactory.Unprotect(_config.ClientList.FirstOrDefault(x => !string.IsNullOrEmpty(x.EncryptedPassword)).EncryptedPassword, _entropy);
+				_ = CryptoFactory.Unprotect(this._config.ClientList.FirstOrDefault(x => !string.IsNullOrEmpty(x.EncryptedPassword)).EncryptedPassword, Entropy);
 				ret = true;
 			}
 			catch (Exception ex)

@@ -8,18 +8,18 @@ namespace GersangGameManager.PatchManager
 		private List<PatchInfo> _patchList;
 		public PatchList()
 		{
-			_patchList = new List<PatchInfo>();
+			this._patchList = new List<PatchInfo>();
 		}
-		public int Count => _patchList.Count;
+		public int Count => this._patchList.Count;
 
 		public bool IsReadOnly => false;
 
 		public void Add(PatchInfo item)
 		{
-			if (_patchList.Contains(item))
+			if (this._patchList.Contains(item))
 				return;
 			else
-				_patchList.Add(item);
+				this._patchList.Add(item);
 		}
 
 		public void AddRange(IEnumerable<PatchInfo> items)
@@ -28,15 +28,15 @@ namespace GersangGameManager.PatchManager
 				Add(item);
 		}
 
-		public void Clear() => _patchList.Clear();
+		public void Clear() => this._patchList.Clear();
 
-		public bool Contains(PatchInfo item) => _patchList.Contains(item);
+		public bool Contains(PatchInfo item) => this._patchList.Contains(item);
 
-		public void CopyTo(PatchInfo[] array, int arrayIndex) => _patchList.CopyTo(array, arrayIndex);
+		public void CopyTo(PatchInfo[] array, int arrayIndex) => this._patchList.CopyTo(array, arrayIndex);
 
-		public IEnumerator<PatchInfo> GetEnumerator() => _patchList.GetEnumerator();
+		public IEnumerator<PatchInfo> GetEnumerator() => this._patchList.GetEnumerator();
 
-		public bool Remove(PatchInfo item) => _patchList.Remove(item);
+		public bool Remove(PatchInfo item) => this._patchList.Remove(item);
 
 		IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 	}

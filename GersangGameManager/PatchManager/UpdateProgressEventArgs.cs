@@ -16,7 +16,7 @@
 	{
 		public UpdateTaskType UpdateTaskType { get; set; }
 		public int Percentage { get; set; }
-		public PatchInfo PatchInfo { get; set; }
+		public PatchInfo? PatchInfo { get; set; }
 		public float? DownloadProgress { get; set; }
 	}
 }

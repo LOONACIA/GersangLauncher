@@ -3,6 +3,7 @@
 	public enum OtpResultType
 	{
 		Fail,
-		Success
+		Success,
+		Error
 	}
 }

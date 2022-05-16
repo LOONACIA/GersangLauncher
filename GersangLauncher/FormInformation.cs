@@ -37,7 +37,12 @@ namespace GersangLauncher
 
 		private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			OpenLink(linkLabel2.Text);
+			OpenLink("https://loonacia.tistory.com");
+		}
+
+		private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			OpenLink("https://github.com/LOONACIA/GersangLauncher/blob/main/THIRD-PARTY-NOTICES.md");
 		}
 
 		private void OpenLink(string link)

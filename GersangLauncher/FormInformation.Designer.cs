@@ -36,7 +36,7 @@
 			this.TextBoxLicense = new System.Windows.Forms.TextBox();
 			this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
 			this.LabelInformation = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
+			this.linkLabel3 = new System.Windows.Forms.LinkLabel();
 			this.linkLabel2 = new System.Windows.Forms.LinkLabel();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.flowLayoutPanel1.SuspendLayout();
@@ -132,11 +132,11 @@
 			// tableLayoutPanel2
 			// 
 			this.tableLayoutPanel2.ColumnCount = 2;
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.61074F));
-			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.38926F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 46.13003F));
+			this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 53.86997F));
 			this.tableLayoutPanel2.Controls.Add(this.LabelInformation, 0, 0);
-			this.tableLayoutPanel2.Controls.Add(this.label3, 0, 1);
-			this.tableLayoutPanel2.Controls.Add(this.linkLabel2, 1, 1);
+			this.tableLayoutPanel2.Controls.Add(this.linkLabel3, 1, 1);
+			this.tableLayoutPanel2.Controls.Add(this.linkLabel2, 0, 1);
 			this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 102);
 			this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -144,8 +144,6 @@
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
 			this.tableLayoutPanel2.Size = new System.Drawing.Size(298, 131);
 			this.tableLayoutPanel2.TabIndex = 5;
 			// 
@@ -160,30 +158,31 @@
 			this.LabelInformation.TabIndex = 6;
 			this.LabelInformation.Text = "사용법 및 프로그램 최신 버전은 상단 페이지에서 확인할 수 있습니다.\r\n\r\n※ 프로그램 사용에 대한 책임은 전적으로 사용자에게 있습니다.";
 			// 
-			// label3
+			// linkLabel3
 			// 
-			this.label3.AutoSize = true;
-			this.label3.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label3.Location = new System.Drawing.Point(3, 90);
-			this.label3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(118, 15);
-			this.label3.TabIndex = 7;
-			this.label3.Text = "버그 제보/기능 건의";
-			this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			this.linkLabel3.AutoSize = true;
+			this.linkLabel3.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.linkLabel3.Location = new System.Drawing.Point(140, 90);
+			this.linkLabel3.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.linkLabel3.Name = "linkLabel3";
+			this.linkLabel3.Size = new System.Drawing.Size(155, 15);
+			this.linkLabel3.TabIndex = 9;
+			this.linkLabel3.TabStop = true;
+			this.linkLabel3.Text = "오픈소스 라이선스";
+			this.linkLabel3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
 			// 
 			// linkLabel2
 			// 
 			this.linkLabel2.AutoSize = true;
 			this.linkLabel2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.linkLabel2.Location = new System.Drawing.Point(127, 90);
-			this.linkLabel2.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.linkLabel2.Location = new System.Drawing.Point(3, 85);
 			this.linkLabel2.Name = "linkLabel2";
-			this.linkLabel2.Size = new System.Drawing.Size(168, 15);
+			this.linkLabel2.Size = new System.Drawing.Size(131, 25);
 			this.linkLabel2.TabIndex = 8;
 			this.linkLabel2.TabStop = true;
-			this.linkLabel2.Text = "https://loonacia.tistory.com";
-			this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.linkLabel2.Text = "버그 제보/기능 건의";
+			this.linkLabel2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
 			this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
 			// 
 			// FormInformation
@@ -217,8 +216,8 @@
 		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
 		private System.Windows.Forms.Label LabelInformation;
-		private System.Windows.Forms.Label label3;
-		private System.Windows.Forms.LinkLabel linkLabel2;
+		private System.Windows.Forms.LinkLabel linkLabel3;
 		private System.Windows.Forms.TextBox TextBoxLicense;
+		private System.Windows.Forms.LinkLabel linkLabel2;
 	}
 }

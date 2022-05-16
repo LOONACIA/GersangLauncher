@@ -1,4 +1,5 @@
 ﻿using GersangGameManager.Service;
+using HtmlAgilityPack;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -10,110 +11,142 @@ namespace GersangGameManager.Handler
 {
 	public class HttpClientGameManagerHandler : GameManagerHandler
 	{
+#nullable disable
 		private HttpService _httpService;
-		private HttpContentBuilder _builder;
+#nullable restore
+		private HttpContentBuilder _builder = new();
 
-		private WebSocketService _websocketService;
+		private WebSocketService? _websocketService;
 		private const string _wsUrl = "ws://127.0.0.1:1818";
 
-		private string _cmdStr;
+		private string? _cmdStr;
 
 		protected override void Configure(ClientInfo clientInfo)
 		{
 			base.Configure(clientInfo);
-			_builder = new HttpContentBuilder();
-			_httpService = new HttpService();
-			_httpService.BaseAddress = base.BaseAddress;
-			_websocketService = new WebSocketService();
-			_websocketService.OnOpen += _websocketService_OnOpen;
+			this._builder = new HttpContentBuilder();
+			this._httpService = new HttpService();
+			this._httpService.BaseAddress = base.BaseAddress;
+			this._websocketService = new WebSocketService();
+			this._websocketService.OnOpen += _websocketService_OnOpen;
 		}
 
 		protected override async Task<LogInResult> LogIn(DecryptDelegate decryptor)
 		{
-			_builder.Clear();
-			var password = decryptor(_clientInfo.EncryptedPassword);
-			_builder.Add(ParamID, _clientInfo.ID);
-			_builder.Add(ParamPW, password);
-			var content = _builder.Build(ContentType.FormData);
+			if (string.IsNullOrEmpty(this._clientInfo.ID) || string.IsNullOrEmpty(this._clientInfo.EncryptedPassword))
+				throw new InvalidOperationException("Check ID or Password");
 
-			var body = await _httpService.PostAsync(LogInUrl, content);
+			this._builder.Clear();
+			var password = decryptor(this._clientInfo.EncryptedPassword);
+			this._builder.Add(ParamID, this._clientInfo.ID);
+			this._builder.Add(ParamPW, password);
+			var content = this._builder.Build(ContentType.FormData);
 
-			var result = body.ToLower();
-			if (result.Contains("otp"))
+			var body = await this._httpService.PostAsync(LogInUrl, content);
+
+			if (CheckRequiredOtp(body))
 				return new LogInResult(LogInResultType.RequireOtp);
-			else if (result.Contains("alert"))
-			{
-				var errorMessage = GetAlert(result);
+
+			var errorMessage = GetAlert(body);
+			if (!string.IsNullOrEmpty(errorMessage))
 				return new LogInResult(LogInResultType.Fail, errorMessage);
-			}
-			else
-				return new LogInResult(LogInResultType.Success);
+
+			return new LogInResult(LogInResultType.Success, null);
 		}
 
 		protected override async Task<OtpResult> InputOtp(string otp)
 		{
-			_builder.Add(ParamOTP, otp);
-			var content = _builder.Build(ContentType.FormData);
+			this._builder.Add(ParamOTP, otp);
+			var content = this._builder.Build(ContentType.FormData);
 
-			var body = await _httpService.PostAsync(OtpUrl, content);
+			var body = await this._httpService.PostAsync(OtpUrl, content);
+			this._builder.Clear();
+			this._builder.AddRange(GetLoginParameter(body));
+			this._builder.Add(ParamOTP, otp);
+			content = this._builder.Build(ContentType.FormData);
 
-			var result = body.ToLower();
-			var errorMessage = GetAlert(result);
+			body = await this._httpService.PostAsync(OtpProcUrl, content);
+			this._builder.Clear();
 
+			var errorMessage = GetAlert(body);
 			if (!string.IsNullOrEmpty(errorMessage))
 				return new OtpResult(OtpResultType.Fail, errorMessage);
-			else
+
+			bool isloginSucceeded = await CheckLogIn();
+			return isloginSucceeded
+				? new OtpResult(OtpResultType.Success, null)
+				: new OtpResult(OtpResultType.Error, "Undefined Error");
+		}
+
+		private Dictionary<string, string> GetLoginParameter(string htmlString)
+		{
+			var ret = new Dictionary<string, string>();
+
+			var html = new HtmlDocument();
+			html.LoadHtml(htmlString);
+
+			var divNodes = html.DocumentNode.SelectNodes("//div[@class='cont_box']");
+			foreach (var divNode in divNodes)
 			{
-				_builder.Clear();
-				return new OtpResult(OtpResultType.Success);
+				var inputNodes = divNode.SelectNodes("form/input[@id]");
+				foreach (var inputNode in inputNodes)
+				{
+					ret.Add(inputNode.Attributes["name"].Value, inputNode.Attributes["value"].Value);
+				}
 			}
+
+			return ret;
 		}
 
 		protected override async Task<bool> CheckLogIn()
 		{
-			if(_httpService is null)
+			if(this._httpService is null)
 			{
-				_httpService = new HttpService();
-				_httpService.BaseAddress = base.BaseAddress;
+				this._httpService = new HttpService();
+				this._httpService.BaseAddress = base.BaseAddress;
 			}
-			await Task.Yield();
-			return !string.IsNullOrEmpty(_httpService.GetCookie("memberID"));
+
+			var body = await this._httpService.GetAsync(IndexUrl);
+
+			var html = new HtmlDocument();
+			html.LoadHtml(body);
+
+			return html.DocumentNode.SelectSingleNode("//div[@class='user_name']") is not null;
 		}
 
 		protected override async Task GameStart()
 		{
-			var body = await _httpService.GetAsync(IndexUrl);
-			var serverType = _clientInfo.ServerType switch
+			var body = await this._httpService.GetAsync(IndexUrl);
+			var serverType = this._clientInfo.ServerType switch
 			{
 				ServerType.Main => "main",
 				ServerType.Test => "test",
 				_ => "main"
 			};
-			_cmdStr = serverType + '\t' + GetCmdStr(body);
+			this._cmdStr = serverType + '\t' + GetCmdStr(body);
 
 			await ExecuteStarter();
 		}
 
 		protected override async Task LogOut()
 		{
-			await _httpService.GetAsync(LogOutUrl);
+			await this._httpService.GetAsync(LogOutUrl);
 		}
 
 		protected override async Task<bool> GetSearchReward()
 		{
-			var body = await _httpService.GetAsync(EventUrl);
+			var body = await this._httpService.GetAsync(EventUrl);
 
 			var eventUrls = GetEventUrls(body);
 			string target = string.Empty;
-			string lastSegment = string.Empty;
 			foreach (var evtUrl in eventUrls)
 			{
-				var response = await _httpService.GetAsync(evtUrl);
+				var response = await this._httpService.GetAsync(evtUrl);
 				if (!response.Contains("거상 페이지 오류"))
 				{
 					var uri = new Uri(evtUrl);
 					var segments = uri.PathAndQuery;
-					lastSegment = uri.Segments[^1];
+					string lastSegment = uri.Segments[^1];
 					target = segments.Replace(lastSegment, string.Empty);
 					break;
 				}
@@ -128,36 +161,34 @@ namespace GersangGameManager.Handler
 			bool ret = false;
 			for (int i = 1; i < 5; ++i)
 			{
-				_builder.Clear();
-				_builder.Add("EventIdx", i.ToString());
-				var result = GetAlert(await _httpService.PostAsync(target + "event_Search_UseProc.gs", _builder.Build(ContentType.FormData)));
+				this._builder.Clear();
+				this._builder.Add("EventIdx", i.ToString());
+				var result = GetAlert(await this._httpService.PostAsync(target + "event_Search_UseProc.gs", this._builder.Build(ContentType.FormData)));
 				Debug.WriteLine(result);
 				ret |= result.Contains("지급");
 			}
 			return ret;
 		}
 
+		protected virtual bool CheckRequiredOtp(string responseBody)
+		{
+			var html = new HtmlDocument();
+			html.LoadHtml(responseBody);
+
+			return html.DocumentNode.SelectSingleNode("form[@method='post' and @action='otp.gs']") is not null;
+		}
+
 		private async Task ExecuteStarter()
 		{
-			if (_websocketService.IsDisConnected)
-			{
-				return;
-			}
-			else if (_websocketService is null)
+			if (!OperatingSystem.IsWindows())
+				throw new NotSupportedException("Check if OS is MS Windows");
+			if (this._websocketService?.IsDisConnected ?? false)
 				return;
 
 			string path = string.Empty;
-			using (RegistryKey registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command"))
-			{
-				if (registryKey != null)
-				{
-					path = registryKey.GetValue("", true).ToString();
-				}
-			}
-			if (string.IsNullOrEmpty(path))
-			{
-				throw new GameManagerException("거상 게임 스타터 설치 후 다시 실행해 주세요.");
-			}
+			using var registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command");
+			if (registryKey is null)
+				throw new InvalidOperationException("스타터가 설치되어 있지 않습니다.");
 
 			Process process = new Process();
 			Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -166,16 +197,19 @@ namespace GersangGameManager.Handler
 
 			process.Start();
 
-			await _websocketService.ConnectAsync(_wsUrl);
+			await this._websocketService!.ConnectAsync(_wsUrl);
 		}
 
-		private async void _websocketService_OnOpen(object sender, EventArgs e)
+		private async void _websocketService_OnOpen(object? sender, EventArgs e)
 		{
+			if (string.IsNullOrEmpty(this._cmdStr))
+				return;
+
 			// Send Start Command to Game Starter
-			if (_websocketService is not null)
+			if (this._websocketService is not null)
 			{
-				await _websocketService.SendAsync(_cmdStr);
-				Debug.WriteLine(_cmdStr);
+				await this._websocketService.SendAsync(this._cmdStr);
+				Debug.WriteLine(this._cmdStr);
 			}
 		}
 
@@ -188,14 +222,14 @@ namespace GersangGameManager.Handler
 
 		private string GetAlert(string body)
 		{
-			var regex_Find_Error = new System.Text.RegularExpressions.Regex(@"alert\((.*?)\)");
+			var regex_Find_Error = new System.Text.RegularExpressions.Regex(@"alert\((.*?)\)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 			return regex_Find_Error.Match(body).Groups[1].Value;
 		}
 
 		private async Task GetReferrerCookie()
 		{
-			_httpService.SetReferrer(ReferrerUrl);
-			await _httpService.GetAsync(MainUrl);
+			this._httpService.SetReferrer(ReferrerUrl);
+			await this._httpService.GetAsync(MainUrl);
 		}
 
 		private string[] GetEventUrls(string body) => FindLink(body).Where(x => x.ToLower().Contains("attendance")).ToArray();
@@ -208,10 +242,10 @@ namespace GersangGameManager.Handler
 			var ret = new List<string>();
 
 			matches.ToList()
-				.ForEach(match =>
-				{
-					ret.Add(match.Groups["URL"].Value);
-				});
+				   .ForEach(match =>
+				   {
+					   ret.Add(match.Groups["URL"].Value);
+				   });
 
 			return ret.ToArray();
 		}

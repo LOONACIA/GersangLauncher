@@ -13,11 +13,11 @@ namespace GersangGameManager
 	public record ClientInfo
 	{
 		[JsonPropertyName("id")]
-		public string ID { get; set; }
+		public string? ID { get; set; }
 		[JsonPropertyName("pw")]
-		public string EncryptedPassword { get; set; }
+		public string? EncryptedPassword { get; set; }
 		[JsonPropertyName("path")]
-		public string ClientPath { get; set; }
+		public string? ClientPath { get; set; }
 		[JsonPropertyName("server")]
 		public ServerType ServerType { get; set; }
 	}

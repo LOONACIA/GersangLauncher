@@ -9,7 +9,8 @@ namespace GersangGameManager.Handler
 		public virtual string BaseAddress { get; set; } = "https://www.gersang.co.kr/";
 		protected const string LogInUrl = "member/loginProc.gs";
 		protected const string LogOutUrl = "member/logoutProc.gs";
-		protected const string OtpUrl = "member/otpProc.gs";
+		protected const string OtpUrl = "member/otp.gs";
+		protected const string OtpProcUrl = "member/otpProc.gs";
 		protected const string IndexUrl = "main/index.gs?";
 		protected const string MainUrl = "main.gs";
 		protected const string EventUrl = "news/event.gs";
@@ -23,7 +24,7 @@ namespace GersangGameManager.Handler
 
 		public GameManagerHandler()
 		{
-			_clientInfo = new ClientInfo();
+			this._clientInfo = new ClientInfo();
 		}
 
 		void IGameManagerHandler.Configure(ClientInfo clientInfo)
@@ -35,7 +36,7 @@ namespace GersangGameManager.Handler
 		{
 			if (clientInfo is null)
 				throw new ArgumentException(nameof(ClientInfo));
-			_clientInfo = clientInfo;
+			this._clientInfo = clientInfo;
 		}
 
 		void IGameManagerHandler.ChangeClientPath(string clientPath)
@@ -45,7 +46,7 @@ namespace GersangGameManager.Handler
 
 		protected virtual void ChangeClientPath(string clientPath)
 		{
-			_clientInfo.ClientPath = clientPath;
+			this._clientInfo.ClientPath = clientPath;
 		}
 
 		Task<LogInResult> IGameManagerHandler.LogIn(DecryptDelegate decryptor)
@@ -71,9 +72,9 @@ namespace GersangGameManager.Handler
 
 		Task IGameManagerHandler.GameStart()
 		{
-			var runFile = System.IO.Path.Combine(_clientInfo.ClientPath, "run.exe");
+			var runFile = System.IO.Path.Combine(this._clientInfo.ClientPath, "run.exe");
 			if (!System.IO.File.Exists(runFile))
-				throw new GameManagerException($"{_clientInfo.ClientPath}에 거상 실행 파일이 없습니다. 설치 여부를 다시 확인해 주세요.");
+				throw new GameManagerException($"{this._clientInfo.ClientPath}에 거상 실행 파일이 없습니다. 설치 여부를 다시 확인해 주세요.");
 
 			return GameStart();
 		}
