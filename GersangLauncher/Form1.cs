@@ -154,7 +154,7 @@ namespace GersangLauncher
 						form.Dispose();
 						break;
 					case LogInResultType.StartedClient:
-						var result = MessageBox.Show("게임에 접속 중인 계정으로 재로그인 할 경우 게임이 종료될 수 있습니다. 계속 진행하시겠습니까?", "경고", MessageBoxButtons.YesNo);
+						var result = MessageBox.Show("게임에 접속 중인 계정으로 재로그인 할 경우 게임이 종료될 수 있습니다. 계속 진행하시겠습니까?", "경고", MessageBoxButtons.OKCancel);
 						if (result != DialogResult.OK)
 							break;
 
