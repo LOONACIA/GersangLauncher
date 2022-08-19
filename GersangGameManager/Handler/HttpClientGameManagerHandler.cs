@@ -49,7 +49,13 @@ namespace GersangGameManager.Handler
 
 			var errorMessage = GetAlert(body);
 			if (!string.IsNullOrEmpty(errorMessage))
+			{
 				return new LogInResult(LogInResultType.Fail, errorMessage);
+			}
+			if (CheckifInCert(body))
+			{
+				return new LogInResult(LogInResultType.Fail, "본인인증이 필요합니다. 홈페이지에서 인증 후 재로그인하시기 바랍니다.");
+			}
 
 			return new LogInResult(LogInResultType.Success, null);
 		}
@@ -176,6 +182,14 @@ namespace GersangGameManager.Handler
 			html.LoadHtml(responseBody);
 
 			return html.DocumentNode.SelectSingleNode("form[@method='post' and @action='otp.gs']") is not null;
+		}
+
+		protected virtual bool CheckifInCert(string responseBody)
+		{
+			var html = new HtmlDocument();
+			html.LoadHtml(responseBody);
+
+			return html.DocumentNode.SelectSingleNode("form[@method='post' and @action='loginCertUp.gs']") is not null;
 		}
 
 		private async Task ExecuteStarter()
