@@ -24,25 +24,20 @@ namespace GersangGameManager.Service
 
 				if (!IsSymbolicLink(fullPath))
 				{
-					if (backUpPath != null)
+					if (backUpPath is not null && File.Exists(fullPath))
 					{
-						if (File.Exists(fullPath))
+						if (!backUpPath.Exists)
 						{
-							var backUpFile = Path.Combine(backUpPath.FullName, fi.Name);
-							var dir = Path.GetDirectoryName(backUpFile);
-							if (dir is not null && !Directory.Exists(dir))
-								Directory.CreateDirectory(dir);
-							File.Copy(fullPath, backUpFile, true);
+							backUpPath.Create();
 						}
+						string backupDirectory = Path.Join(backUpPath.FullName, fi.Name);
+						File.Move(fullPath, backupDirectory, true);
 					}
-					fi.CopyTo(fullPath, true);
+					fi.MoveTo(fullPath, true);
 				}
 				current++;
-				if (current % 10 == 0)
-				{
-					Debug.Assert(current / (float)numOfFiles <= 1);
-					progressHandler?.Report(current / (float)numOfFiles);
-				}
+				Debug.Assert(current / (float)numOfFiles <= 1);
+				progressHandler?.Report(current / (float)numOfFiles);
 			}
 
 			foreach (DirectoryInfo subDir in source.GetDirectories())
@@ -65,11 +60,11 @@ namespace GersangGameManager.Service
 		{
 			if (File.Exists(filePath))
 			{
-				var destFi = new FileInfo(filePath);
+				FileInfo destFi = new(filePath);
 				return destFi.Attributes.HasFlag(FileAttributes.ReparsePoint);
 			}
-			else
-				return false;
+
+			return false;
 		}
 	}
 }
