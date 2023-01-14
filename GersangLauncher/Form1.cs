@@ -71,7 +71,6 @@ namespace GersangLauncher
 			clientInfoUserControl.InstallPathChanged += ClientInfoUserControl_InstallPathChanged;
 			clientInfoUserControl.LogInBtnClicked += ClientInfoUserControl_LogInBtnClickedAsync;
 			clientInfoUserControl.StartBtnClicked += ClientInfoUserControl_StartBtnClicked;
-			clientInfoUserControl.SearchBtnClicked += ClientInfoUserControl_SearchBtnClicked;
 			clientInfoUserControl.PatchBtnClicked += ClientInfoUserControl_PatchBtnClicked;
 
 			ClientListPanel.Controls.Add(clientInfoUserControl);
