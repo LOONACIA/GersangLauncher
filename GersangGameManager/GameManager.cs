@@ -95,6 +95,7 @@ namespace GersangGameManager
 			return true;
 		}
 
+		[Obsolete]
 		public async Task<bool?> GetSearchReward()
 		{
 			_isLoginSucceed = await _handler.CheckLogIn().ConfigureAwait(false);
