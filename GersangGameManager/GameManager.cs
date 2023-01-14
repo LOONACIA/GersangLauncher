@@ -83,7 +83,24 @@ namespace GersangGameManager
 
 		public async Task<bool> GameStart()
 		{
-			_isLoginSucceed = await _handler.CheckLogIn().ConfigureAwait(false);
+			int count = 3;
+			while (true)
+			{
+				try
+				{
+					_isLoginSucceed = await _handler.CheckLogIn().ConfigureAwait(false);
+					break;
+				}
+				catch (System.Net.Http.HttpRequestException)
+				{
+					count--;
+				}
+				if (count <= 0)
+				{
+					return false;
+				}
+			}
+			
 			if (!_isLoginSucceed)
 				return false;
 
