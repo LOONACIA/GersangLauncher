@@ -65,7 +65,7 @@ namespace GersangLauncher
 				clientInfo.ServerType = ServerType.Main;
 
 			if (!string.IsNullOrEmpty(clientInfo.ClientPath))
-				CheckUpdate(clientInfoUserControl, clientInfo);
+				_ = CheckUpdate(clientInfoUserControl, clientInfo);
 
 			clientInfoUserControl.SaveBtnClicked += ClientInfoUserControl_SaveBtnClicked;
 			clientInfoUserControl.InstallPathChanged += ClientInfoUserControl_InstallPathChanged;

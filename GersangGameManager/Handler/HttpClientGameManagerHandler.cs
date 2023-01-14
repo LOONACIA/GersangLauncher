@@ -196,8 +196,6 @@ namespace GersangGameManager.Handler
 		{
 			if (!OperatingSystem.IsWindows())
 				throw new NotSupportedException("Check if OS is MS Windows");
-			if (_websocketService?.IsDisConnected ?? false)
-				return;
 
 			using var registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command");
 			if (registryKey is null)
@@ -215,7 +213,7 @@ namespace GersangGameManager.Handler
 			await _websocketService!.ConnectAsync(_wsUrl).ConfigureAwait(false);
 		}
 
-		private async void _websocketService_OnOpen(object? sender, EventArgs e)
+		private async void _websocketService_OnOpen()
 		{
 			if (string.IsNullOrEmpty(_cmdStr))
 				return;

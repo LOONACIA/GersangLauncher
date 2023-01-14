@@ -102,7 +102,6 @@ namespace GersangGameManager
 			if (!_isLoginSucceed)
 				return null;
 
-			bool ret = false;
 			return await _handler.GetSearchReward().ConfigureAwait(false);
 		}
 
