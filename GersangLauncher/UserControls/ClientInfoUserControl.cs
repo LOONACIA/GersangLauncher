@@ -66,14 +66,12 @@ namespace GersangLauncher.UserControls
 		public event EventHandler<ClientInfo>? LogInBtnClicked;
 		public event EventHandler<string>? InstallPathChanged;
 		public event EventHandler<ClientInfo>? StartBtnClicked;
-		public event EventHandler<ClientInfo>? SearchBtnClicked;
 		public event EventHandler<ClientInfo>? PatchBtnClicked;
 
 		public ClientInfoUserControl()
 		{
 			InitializeComponent();
 			ClientControlToolTip.SetToolTip(BtnSave, "현재 설정을 저장합니다.");
-			ClientControlToolTip.SetToolTip(BtnSearch, "검색 보상을 수령합니다. 로그인 상태에서만 작동합니다.");
 		}
 
 		public ClientInfoUserControl(int index) : this()
@@ -140,11 +138,6 @@ namespace GersangLauncher.UserControls
 			}
 		}
 
-		private void BtnSearch_Click(object sender, EventArgs e)
-		{
-			OnSearchBtnClicked();
-		}
-
 		private void BtnPatch_Click(object sender, EventArgs e)
 		{
 			OnPatchBtnClicked();
@@ -163,11 +156,6 @@ namespace GersangLauncher.UserControls
 		private void OnStartBtnClicked()
 		{
 			StartBtnClicked?.Invoke(this, BuildClientInfo());
-		}
-
-		private void OnSearchBtnClicked()
-		{
-			SearchBtnClicked?.Invoke(this, BuildClientInfo());
 		}
 
 		private void OnPatchBtnClicked()

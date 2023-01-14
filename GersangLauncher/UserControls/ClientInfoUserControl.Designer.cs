@@ -31,7 +31,6 @@
 			this.components = new System.ComponentModel.Container();
 			this.TablePanelMain = new System.Windows.Forms.TableLayoutPanel();
 			this.BtnPatch = new System.Windows.Forms.Button();
-			this.BtnSearch = new System.Windows.Forms.Button();
 			this.BtnStart = new System.Windows.Forms.Button();
 			this.TextBoxGamePath = new System.Windows.Forms.TextBox();
 			this.label2 = new System.Windows.Forms.Label();
@@ -52,18 +51,17 @@
 			// 
 			// TablePanelMain
 			// 
-			this.TablePanelMain.ColumnCount = 9;
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 4.907539F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.61166F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15.59957F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
-			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 8.881229F));
-			this.TablePanelMain.Controls.Add(this.BtnPatch, 9, 0);
-			this.TablePanelMain.Controls.Add(this.BtnSearch, 7, 0);
+			this.TablePanelMain.ColumnCount = 8;
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 112F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.38587F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.62065F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 5.38587F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.62065F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.12004F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 17.12004F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 9.746871F));
+			this.TablePanelMain.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+			this.TablePanelMain.Controls.Add(this.BtnPatch, 8, 0);
 			this.TablePanelMain.Controls.Add(this.BtnStart, 6, 0);
 			this.TablePanelMain.Controls.Add(this.TextBoxGamePath, 5, 1);
 			this.TablePanelMain.Controls.Add(this.label2, 3, 0);
@@ -75,48 +73,35 @@
 			this.TablePanelMain.Controls.Add(this.BtnLogIn, 5, 0);
 			this.TablePanelMain.Controls.Add(this.PanelServerType, 1, 1);
 			this.TablePanelMain.Location = new System.Drawing.Point(0, 0);
+			this.TablePanelMain.Margin = new System.Windows.Forms.Padding(4);
 			this.TablePanelMain.Name = "TablePanelMain";
 			this.TablePanelMain.RowCount = 2;
 			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TablePanelMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-			this.TablePanelMain.Size = new System.Drawing.Size(650, 70);
+			this.TablePanelMain.Size = new System.Drawing.Size(975, 105);
 			this.TablePanelMain.TabIndex = 0;
 			// 
 			// BtnPatch
 			// 
 			this.BtnPatch.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.BtnPatch.Enabled = false;
-			this.BtnPatch.Location = new System.Drawing.Point(599, 5);
-			this.BtnPatch.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.BtnPatch.Location = new System.Drawing.Point(892, 8);
+			this.BtnPatch.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.BtnPatch.Name = "BtnPatch";
-			this.BtnPatch.Size = new System.Drawing.Size(48, 25);
+			this.BtnPatch.Size = new System.Drawing.Size(79, 36);
 			this.BtnPatch.TabIndex = 10;
 			this.BtnPatch.Text = "패치";
 			this.BtnPatch.UseVisualStyleBackColor = true;
 			this.BtnPatch.Click += new System.EventHandler(this.BtnPatch_Click);
 			// 
-			// BtnSearch
-			// 
-			this.BtnSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnSearch.Location = new System.Drawing.Point(548, 5);
-			this.BtnSearch.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
-			this.BtnSearch.Name = "BtnSearch";
-			this.BtnSearch.Size = new System.Drawing.Size(45, 25);
-			this.BtnSearch.TabIndex = 9;
-			this.BtnSearch.Text = "검색";
-			this.BtnSearch.UseVisualStyleBackColor = true;
-			this.BtnSearch.Click += new System.EventHandler(this.BtnSearch_Click);
-			// 
 			// BtnStart
 			// 
 			this.BtnStart.AutoSize = true;
 			this.BtnStart.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnStart.Location = new System.Drawing.Point(459, 5);
-			this.BtnStart.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.BtnStart.Location = new System.Drawing.Point(745, 8);
+			this.BtnStart.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.BtnStart.Name = "BtnStart";
-			this.BtnStart.Size = new System.Drawing.Size(83, 25);
+			this.BtnStart.Size = new System.Drawing.Size(139, 36);
 			this.BtnStart.TabIndex = 6;
 			this.BtnStart.Text = "시작";
 			this.BtnStart.UseVisualStyleBackColor = true;
@@ -124,23 +109,23 @@
 			// 
 			// TextBoxGamePath
 			// 
-			this.TablePanelMain.SetColumnSpan(this.TextBoxGamePath, 4);
+			this.TablePanelMain.SetColumnSpan(this.TextBoxGamePath, 3);
 			this.TextBoxGamePath.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.TextBoxGamePath.Enabled = false;
-			this.TextBoxGamePath.Location = new System.Drawing.Point(370, 41);
-			this.TextBoxGamePath.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+			this.TextBoxGamePath.Location = new System.Drawing.Point(598, 61);
+			this.TextBoxGamePath.Margin = new System.Windows.Forms.Padding(4, 9, 4, 9);
 			this.TextBoxGamePath.Name = "TextBoxGamePath";
-			this.TextBoxGamePath.Size = new System.Drawing.Size(277, 23);
+			this.TextBoxGamePath.Size = new System.Drawing.Size(373, 31);
 			this.TextBoxGamePath.TabIndex = 8;
 			// 
 			// label2
 			// 
 			this.label2.AutoSize = true;
 			this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label2.Location = new System.Drawing.Point(222, 0);
-			this.label2.Margin = new System.Windows.Forms.Padding(1, 0, 1, 5);
+			this.label2.Location = new System.Drawing.Point(355, 0);
+			this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 8);
 			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(26, 30);
+			this.label2.Size = new System.Drawing.Size(42, 44);
 			this.label2.TabIndex = 3;
 			this.label2.Text = "PW";
 			this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -149,10 +134,10 @@
 			// 
 			this.label1.AutoSize = true;
 			this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.label1.Location = new System.Drawing.Point(76, 0);
-			this.label1.Margin = new System.Windows.Forms.Padding(1, 0, 1, 5);
+			this.label1.Location = new System.Drawing.Point(114, 0);
+			this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 8);
 			this.label1.Name = "label1";
-			this.label1.Size = new System.Drawing.Size(26, 30);
+			this.label1.Size = new System.Drawing.Size(42, 44);
 			this.label1.TabIndex = 1;
 			this.label1.Text = "ID";
 			this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -160,10 +145,10 @@
 			// TextBoxPW
 			// 
 			this.TextBoxPW.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TextBoxPW.Location = new System.Drawing.Point(252, 6);
-			this.TextBoxPW.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+			this.TextBoxPW.Location = new System.Drawing.Point(403, 9);
+			this.TextBoxPW.Margin = new System.Windows.Forms.Padding(4, 9, 4, 9);
 			this.TextBoxPW.Name = "TextBoxPW";
-			this.TextBoxPW.Size = new System.Drawing.Size(112, 23);
+			this.TextBoxPW.Size = new System.Drawing.Size(187, 31);
 			this.TextBoxPW.TabIndex = 4;
 			this.TextBoxPW.UseSystemPasswordChar = true;
 			this.TextBoxPW.TextChanged += new System.EventHandler(this.TextBoxPW_TextChanged);
@@ -172,19 +157,19 @@
 			// TextBoxID
 			// 
 			this.TextBoxID.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.TextBoxID.Location = new System.Drawing.Point(106, 6);
-			this.TextBoxID.Margin = new System.Windows.Forms.Padding(3, 6, 3, 6);
+			this.TextBoxID.Location = new System.Drawing.Point(162, 9);
+			this.TextBoxID.Margin = new System.Windows.Forms.Padding(4, 9, 4, 9);
 			this.TextBoxID.Name = "TextBoxID";
-			this.TextBoxID.Size = new System.Drawing.Size(112, 23);
+			this.TextBoxID.Size = new System.Drawing.Size(187, 31);
 			this.TextBoxID.TabIndex = 2;
 			// 
 			// BtnFindGamePath
 			// 
 			this.BtnFindGamePath.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnFindGamePath.Location = new System.Drawing.Point(252, 40);
-			this.BtnFindGamePath.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.BtnFindGamePath.Location = new System.Drawing.Point(403, 60);
+			this.BtnFindGamePath.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.BtnFindGamePath.Name = "BtnFindGamePath";
-			this.BtnFindGamePath.Size = new System.Drawing.Size(112, 25);
+			this.BtnFindGamePath.Size = new System.Drawing.Size(187, 37);
 			this.BtnFindGamePath.TabIndex = 7;
 			this.BtnFindGamePath.Text = "경로";
 			this.BtnFindGamePath.UseVisualStyleBackColor = true;
@@ -193,11 +178,11 @@
 			// BtnSave
 			// 
 			this.BtnSave.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnSave.Location = new System.Drawing.Point(5, 5);
-			this.BtnSave.Margin = new System.Windows.Forms.Padding(5);
+			this.BtnSave.Location = new System.Drawing.Point(8, 8);
+			this.BtnSave.Margin = new System.Windows.Forms.Padding(8);
 			this.BtnSave.Name = "BtnSave";
 			this.TablePanelMain.SetRowSpan(this.BtnSave, 2);
-			this.BtnSave.Size = new System.Drawing.Size(65, 60);
+			this.BtnSave.Size = new System.Drawing.Size(96, 89);
 			this.BtnSave.TabIndex = 0;
 			this.BtnSave.TabStop = false;
 			this.BtnSave.Text = "-";
@@ -208,10 +193,10 @@
 			// 
 			this.BtnLogIn.AutoSize = true;
 			this.BtnLogIn.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.BtnLogIn.Location = new System.Drawing.Point(370, 5);
-			this.BtnLogIn.Margin = new System.Windows.Forms.Padding(3, 5, 3, 5);
+			this.BtnLogIn.Location = new System.Drawing.Point(598, 8);
+			this.BtnLogIn.Margin = new System.Windows.Forms.Padding(4, 8, 4, 8);
 			this.BtnLogIn.Name = "BtnLogIn";
-			this.BtnLogIn.Size = new System.Drawing.Size(83, 25);
+			this.BtnLogIn.Size = new System.Drawing.Size(139, 36);
 			this.BtnLogIn.TabIndex = 5;
 			this.BtnLogIn.Text = "로그인";
 			this.BtnLogIn.UseVisualStyleBackColor = true;
@@ -224,19 +209,20 @@
 			this.PanelServerType.Controls.Add(this.RBIsMain);
 			this.PanelServerType.Controls.Add(this.RBIsTest);
 			this.PanelServerType.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.PanelServerType.Location = new System.Drawing.Point(78, 38);
+			this.PanelServerType.Location = new System.Drawing.Point(116, 56);
+			this.PanelServerType.Margin = new System.Windows.Forms.Padding(4);
 			this.PanelServerType.Name = "PanelServerType";
-			this.PanelServerType.Size = new System.Drawing.Size(168, 29);
+			this.PanelServerType.Size = new System.Drawing.Size(279, 45);
 			this.PanelServerType.TabIndex = 11;
 			// 
 			// LabelServerType
 			// 
 			this.LabelServerType.Anchor = System.Windows.Forms.AnchorStyles.Left;
 			this.LabelServerType.AutoSize = true;
-			this.LabelServerType.Location = new System.Drawing.Point(1, 5);
-			this.LabelServerType.Margin = new System.Windows.Forms.Padding(1, 0, 1, 0);
+			this.LabelServerType.Location = new System.Drawing.Point(2, 6);
+			this.LabelServerType.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
 			this.LabelServerType.Name = "LabelServerType";
-			this.LabelServerType.Size = new System.Drawing.Size(31, 15);
+			this.LabelServerType.Size = new System.Drawing.Size(48, 25);
 			this.LabelServerType.TabIndex = 5;
 			this.LabelServerType.Text = "서버";
 			// 
@@ -244,10 +230,10 @@
 			// 
 			this.RBIsMain.AutoSize = true;
 			this.RBIsMain.Checked = true;
-			this.RBIsMain.Location = new System.Drawing.Point(36, 3);
-			this.RBIsMain.Margin = new System.Windows.Forms.Padding(3, 3, 1, 3);
+			this.RBIsMain.Location = new System.Drawing.Point(56, 4);
+			this.RBIsMain.Margin = new System.Windows.Forms.Padding(4, 4, 2, 4);
 			this.RBIsMain.Name = "RBIsMain";
-			this.RBIsMain.Size = new System.Drawing.Size(49, 19);
+			this.RBIsMain.Size = new System.Drawing.Size(73, 29);
 			this.RBIsMain.TabIndex = 3;
 			this.RBIsMain.TabStop = true;
 			this.RBIsMain.Text = "메인";
@@ -256,21 +242,22 @@
 			// RBIsTest
 			// 
 			this.RBIsTest.AutoSize = true;
-			this.RBIsTest.Location = new System.Drawing.Point(87, 3);
-			this.RBIsTest.Margin = new System.Windows.Forms.Padding(1, 3, 1, 3);
+			this.RBIsTest.Location = new System.Drawing.Point(133, 4);
+			this.RBIsTest.Margin = new System.Windows.Forms.Padding(2, 4, 2, 4);
 			this.RBIsTest.Name = "RBIsTest";
-			this.RBIsTest.Size = new System.Drawing.Size(61, 19);
+			this.RBIsTest.Size = new System.Drawing.Size(91, 29);
 			this.RBIsTest.TabIndex = 4;
 			this.RBIsTest.Text = "테스트";
 			this.RBIsTest.UseVisualStyleBackColor = true;
 			// 
 			// ClientInfoUserControl
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+			this.AutoScaleDimensions = new System.Drawing.SizeF(144F, 144F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
 			this.Controls.Add(this.TablePanelMain);
+			this.Margin = new System.Windows.Forms.Padding(4);
 			this.Name = "ClientInfoUserControl";
-			this.Size = new System.Drawing.Size(650, 70);
+			this.Size = new System.Drawing.Size(975, 105);
 			this.TablePanelMain.ResumeLayout(false);
 			this.TablePanelMain.PerformLayout();
 			this.PanelServerType.ResumeLayout(false);
@@ -291,7 +278,6 @@
 		private System.Windows.Forms.Button BtnFindGamePath;
 		private System.Windows.Forms.Button BtnSave;
 		private System.Windows.Forms.Button BtnLogIn;
-		private System.Windows.Forms.Button BtnSearch;
 		private System.Windows.Forms.Button BtnPatch;
 		private System.Windows.Forms.ToolTip ClientControlToolTip;
 		private System.Windows.Forms.FlowLayoutPanel PanelServerType;
