@@ -7,7 +7,6 @@
 	<Deterministic>false</Deterministic>
     <UseWindowsForms>true</UseWindowsForms>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AssemblyVersion>0.2.0</AssemblyVersion>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>full</DebugType>
