@@ -24,25 +24,25 @@ namespace GersangGameManager.Handler
 		protected override void Configure(ClientInfo clientInfo)
 		{
 			base.Configure(clientInfo);
-			this._builder = new HttpContentBuilder();
-			this._httpService = new HttpService();
-			this._httpService.BaseAddress = base.BaseAddress;
-			this._websocketService = new WebSocketService();
-			this._websocketService.OnOpen += _websocketService_OnOpen;
+			_builder = new HttpContentBuilder();
+			_httpService = new HttpService();
+			_httpService.BaseAddress = base.BaseAddress;
+			_websocketService = new WebSocketService();
+			_websocketService.OnOpen += _websocketService_OnOpen;
 		}
 
 		protected override async Task<LogInResult> LogIn(DecryptDelegate decryptor)
 		{
-			if (string.IsNullOrEmpty(this._clientInfo.ID) || string.IsNullOrEmpty(this._clientInfo.EncryptedPassword))
+			if (string.IsNullOrEmpty(_clientInfo.ID) || string.IsNullOrEmpty(_clientInfo.EncryptedPassword))
 				throw new InvalidOperationException("Check ID or Password");
 
-			this._builder.Clear();
-			var password = decryptor(this._clientInfo.EncryptedPassword);
-			this._builder.Add(ParamID, this._clientInfo.ID);
-			this._builder.Add(ParamPW, password);
-			var content = this._builder.Build(ContentType.FormData);
+			_builder.Clear();
+			var password = decryptor(_clientInfo.EncryptedPassword);
+			_builder.Add(ParamID, _clientInfo.ID);
+			_builder.Add(ParamPW, password);
+			var content = _builder.Build(ContentType.FormData);
 
-			var body = await this._httpService.PostAsync(LogInUrl, content);
+			var body = await _httpService.PostAsync(LogInUrl, content).ConfigureAwait(false);
 
 			if (CheckRequiredOtp(body))
 				return new LogInResult(LogInResultType.RequireOtp);
@@ -62,23 +62,23 @@ namespace GersangGameManager.Handler
 
 		protected override async Task<OtpResult> InputOtp(string otp)
 		{
-			this._builder.Add(ParamOTP, otp);
-			var content = this._builder.Build(ContentType.FormData);
+			_builder.Add(ParamOTP, otp);
+			var content = _builder.Build(ContentType.FormData);
 
-			var body = await this._httpService.PostAsync(OtpUrl, content);
-			this._builder.Clear();
-			this._builder.AddRange(GetLoginParameter(body));
-			this._builder.Add(ParamOTP, otp);
-			content = this._builder.Build(ContentType.FormData);
+			var body = await _httpService.PostAsync(OtpUrl, content).ConfigureAwait(false);
+			_builder.Clear();
+			_builder.AddRange(GetLoginParameter(body));
+			_builder.Add(ParamOTP, otp);
+			content = _builder.Build(ContentType.FormData);
 
-			body = await this._httpService.PostAsync(OtpProcUrl, content);
-			this._builder.Clear();
+			body = await _httpService.PostAsync(OtpProcUrl, content).ConfigureAwait(false);
+			_builder.Clear();
 
 			var errorMessage = GetAlert(body);
 			if (!string.IsNullOrEmpty(errorMessage))
 				return new OtpResult(OtpResultType.Fail, errorMessage);
 
-			bool isloginSucceeded = await CheckLogIn();
+			bool isloginSucceeded = await CheckLogIn().ConfigureAwait(false);
 			return isloginSucceeded
 				? new OtpResult(OtpResultType.Success, null)
 				: new OtpResult(OtpResultType.Error, "Undefined Error");
@@ -106,13 +106,13 @@ namespace GersangGameManager.Handler
 
 		protected override async Task<bool> CheckLogIn()
 		{
-			if(this._httpService is null)
+			if(_httpService is null)
 			{
-				this._httpService = new HttpService();
-				this._httpService.BaseAddress = base.BaseAddress;
+				_httpService = new HttpService();
+				_httpService.BaseAddress = base.BaseAddress;
 			}
 
-			var body = await this._httpService.GetAsync(IndexUrl);
+			var body = await _httpService.GetAsync(IndexUrl).ConfigureAwait(false);
 
 			var html = new HtmlDocument();
 			html.LoadHtml(body);
@@ -122,32 +122,32 @@ namespace GersangGameManager.Handler
 
 		protected override async Task GameStart()
 		{
-			var body = await this._httpService.GetAsync(IndexUrl);
-			var serverType = this._clientInfo.ServerType switch
+			var body = await _httpService.GetAsync(IndexUrl).ConfigureAwait(false);
+			var serverType = _clientInfo.ServerType switch
 			{
 				ServerType.Main => "main",
 				ServerType.Test => "test",
 				_ => "main"
 			};
-			this._cmdStr = serverType + '\t' + GetCmdStr(body);
+			_cmdStr = serverType + '\t' + GetCmdStr(body);
 
 			await ExecuteStarter();
 		}
 
-		protected override async Task LogOut()
+		protected override Task LogOut()
 		{
-			await this._httpService.GetAsync(LogOutUrl);
+			return _httpService.GetAsync(LogOutUrl);
 		}
 
 		protected override async Task<bool> GetSearchReward()
 		{
-			var body = await this._httpService.GetAsync(EventUrl);
+			var body = await _httpService.GetAsync(EventUrl).ConfigureAwait(false);
 
 			var eventUrls = GetEventUrls(body);
 			string target = string.Empty;
 			foreach (var evtUrl in eventUrls)
 			{
-				var response = await this._httpService.GetAsync(evtUrl);
+				var response = await _httpService.GetAsync(evtUrl).ConfigureAwait(false);
 				if (!response.Contains("거상 페이지 오류"))
 				{
 					var uri = new Uri(evtUrl);
@@ -162,14 +162,14 @@ namespace GersangGameManager.Handler
 				target = target[1..];
 
 			// Get referrer cookie from BaseAddress/main.gs
-			await GetReferrerCookie();
+			await GetReferrerCookie().ConfigureAwait(false);
 
 			bool ret = false;
 			for (int i = 1; i < 5; ++i)
 			{
-				this._builder.Clear();
-				this._builder.Add("EventIdx", i.ToString());
-				var result = GetAlert(await this._httpService.PostAsync(target + "event_Search_UseProc.gs", this._builder.Build(ContentType.FormData)));
+				_builder.Clear();
+				_builder.Add("EventIdx", i.ToString());
+				var result = GetAlert(await _httpService.PostAsync(target + "event_Search_UseProc.gs", _builder.Build(ContentType.FormData)).ConfigureAwait(false));
 				Debug.WriteLine(result);
 				ret |= result.Contains("지급");
 			}
@@ -196,7 +196,7 @@ namespace GersangGameManager.Handler
 		{
 			if (!OperatingSystem.IsWindows())
 				throw new NotSupportedException("Check if OS is MS Windows");
-			if (this._websocketService?.IsDisConnected ?? false)
+			if (_websocketService?.IsDisConnected ?? false)
 				return;
 
 			using var registryKey = Registry.ClassesRoot.OpenSubKey("Gersang\\shell\\open\\command");
@@ -212,19 +212,19 @@ namespace GersangGameManager.Handler
 
 			process.Start();
 
-			await this._websocketService!.ConnectAsync(_wsUrl);
+			await _websocketService!.ConnectAsync(_wsUrl).ConfigureAwait(false);
 		}
 
 		private async void _websocketService_OnOpen(object? sender, EventArgs e)
 		{
-			if (string.IsNullOrEmpty(this._cmdStr))
+			if (string.IsNullOrEmpty(_cmdStr))
 				return;
 
 			// Send Start Command to Game Starter
-			if (this._websocketService is not null)
+			if (_websocketService is not null)
 			{
-				await this._websocketService.SendAsync(this._cmdStr);
-				Debug.WriteLine(this._cmdStr);
+				await _websocketService.SendAsync(_cmdStr).ConfigureAwait(false);
+				Debug.WriteLine(_cmdStr);
 			}
 		}
 
@@ -241,10 +241,10 @@ namespace GersangGameManager.Handler
 			return regex_Find_Error.Match(body).Groups[1].Value;
 		}
 
-		private async Task GetReferrerCookie()
+		private Task GetReferrerCookie()
 		{
-			this._httpService.SetReferrer(ReferrerUrl);
-			await this._httpService.GetAsync(MainUrl);
+			_httpService.SetReferrer(ReferrerUrl);
+			return _httpService.GetAsync(MainUrl);
 		}
 
 		private string[] GetEventUrls(string body) => FindLink(body).Where(x => x.ToLower().Contains("attendance")).ToArray();

@@ -18,16 +18,16 @@ namespace GersangGameManager.Service
 		private CookieContainer _cookieContainer;
 		public string BaseAddress
 		{
-			get => this._client.BaseAddress?.OriginalString ?? string.Empty;
-			set => this._client.BaseAddress = new Uri(value);
+			get => _client.BaseAddress?.OriginalString ?? string.Empty;
+			set => _client.BaseAddress = new Uri(value);
 		}
 
 		public HttpService(HttpClientHandler? handler = null)
 		{
-			this._cookieContainer = new CookieContainer();
+			_cookieContainer = new CookieContainer();
 			if (handler is null)
 			{
-				this._handler = new HttpClientHandler
+				_handler = new HttpClientHandler
 				{
 					CookieContainer = _cookieContainer,
 					AllowAutoRedirect = true,
@@ -36,33 +36,33 @@ namespace GersangGameManager.Service
 			}
 			else
 			{
-				this._handler = handler;
+				_handler = handler;
 			}
-			this._client = new HttpClient(this._handler);
+			_client = new HttpClient(_handler);
 		}
 
 		public void SetCookie(string url, string name, string value)
 		{
-			this._cookieContainer.Add(new Uri(url), new Cookie(name, value));
+			_cookieContainer.Add(new Uri(url), new Cookie(name, value));
 		}
 		public string GetCookie(string name)
 		{
-			if (this._client is null || this._client.BaseAddress is null)
+			if (_client is null || _client.BaseAddress is null)
 				return string.Empty;
 
-			var table = (Hashtable)this._cookieContainer.GetType().InvokeMember("m_domainTable",
+			var table = (Hashtable)_cookieContainer.GetType().InvokeMember("m_domainTable",
 																			BindingFlags.NonPublic |
 																			BindingFlags.GetField |
 																			BindingFlags.Instance,
 																			null,
-																			this._cookieContainer,
+																			_cookieContainer,
 																			null)!;
 			if (table is null)
 				return string.Empty;
 
 			foreach (string key in table.Keys)
 			{
-				foreach (Cookie cookie in this._cookieContainer.GetCookies(this._client.BaseAddress))
+				foreach (Cookie cookie in _cookieContainer.GetCookies(_client.BaseAddress))
 				{
 					if (cookie.Name.ToLower() == name.ToLower())
 						return cookie.Value;
@@ -72,29 +72,29 @@ namespace GersangGameManager.Service
 			return string.Empty;
 		}
 
-		public void SetReferrer(string referer) => this._client.DefaultRequestHeaders.Referrer = new Uri(HttpUtility.UrlDecode(referer));
+		public void SetReferrer(string referer) => _client.DefaultRequestHeaders.Referrer = new Uri(HttpUtility.UrlDecode(referer));
 
 		public async Task<string> GetAsync(string url)
 		{
-			var message = await this._client.GetAsync(url);
+			var message = await _client.GetAsync(url);
 			return await message.Content.ReadAsStringAsync();
 		}
 
 		public async Task<string> PostAsync(string url, HttpContent content)
 		{
-			var message = await this._client.PostAsync(url, content);
+			var message = await _client.PostAsync(url, content);
 			return await message.Content.ReadAsStringAsync();
 		}
 
 		public async Task<byte[]> GetAsBytesAsync(string url)
 		{
-			var message = await this._client.GetAsync(url);
+			var message = await _client.GetAsync(url);
 			return await message.Content.ReadAsByteArrayAsync();
 		}
 
 		public async Task DownloadAsync(string url, string fileName, IProgress<float>? progress = null, CancellationToken cancellationToken = default)
 		{
-			using (var response = await this._client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
+			using (var response = await _client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken))
 			{
 				var contentLength = response.Content.Headers.ContentLength;
 

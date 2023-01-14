@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,18 +15,23 @@ namespace GersangGameManager.Service.Extensions
 			if (destination is null)
 				throw new ArgumentNullException(nameof(destination));
 
-			var buffer = new byte[81920];
-			long totalBytesRead = 0;
-			int bytesRead;
-			int i = 0;
-			while ((bytesRead = await source.ReadAsync(buffer, 0, buffer.Length, cancellationToken).ConfigureAwait(false)) != 0)
+			var buffer = ArrayPool<byte>.Shared.Rent(81920);
+			try
 			{
-				await destination.WriteAsync(buffer, 0, bytesRead, cancellationToken).ConfigureAwait(false);
-				totalBytesRead += bytesRead;
-				if (i % 512 == 0)
-					progress?.Report(totalBytesRead);
+				long totalBytesRead = 0;
+				int bytesRead;
+				int i = 0;
+				while ((bytesRead = await source.ReadAsync(new Memory<byte>(buffer), cancellationToken).ConfigureAwait(false)) != 0)
+				{
+					await destination.WriteAsync(new ReadOnlyMemory<byte>(buffer, 0, bytesRead), cancellationToken).ConfigureAwait(false);
+					totalBytesRead += bytesRead;
+				}
+				progress?.Report(totalBytesRead);
 			}
-			progress?.Report(totalBytesRead);
+			finally
+			{
+				ArrayPool<byte>.Shared.Return(buffer);
+			}
 		}
 	}
 }

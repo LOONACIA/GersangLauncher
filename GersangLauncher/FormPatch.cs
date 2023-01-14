@@ -25,30 +25,30 @@ namespace GersangLauncher
 		public FormPatch(GameManager gameManager, string installPath, ServerType serverType)
 		{
 			InitializeComponent();
-			this._gameManager = gameManager;
-			this._installPath = installPath;
-			this._serverType = serverType;
-			this._cts = new CancellationTokenSource();
-			this._progressHandler = new Progress<UpdateProgressEventArgs>();
-			this._progressHandler.ProgressChanged += _progressHandler_ProgressChanged;
+			_gameManager = gameManager;
+			_installPath = installPath;
+			_serverType = serverType;
+			_cts = new CancellationTokenSource();
+			_progressHandler = new Progress<UpdateProgressEventArgs>();
+			_progressHandler.ProgressChanged += _progressHandler_ProgressChanged;
 
-			this._dataTable = new DataTable();
-			this._dataTable.Columns.Add("이름");
-			this._dataTable.Columns.Add("경로");
-			this._dataTable.Columns.Add("진행도", typeof(float));
-			this._dataTable.DefaultView.Sort = "진행도 desc";
+			_dataTable = new DataTable();
+			_dataTable.Columns.Add("이름");
+			_dataTable.Columns.Add("경로");
+			_dataTable.Columns.Add("진행도", typeof(float));
+			_dataTable.DefaultView.Sort = "진행도 desc";
 			UpdateTableView.RowHeadersVisible = false;
 
 			UpdateTableView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-			UpdateTableView.DataSource = this._dataTable;
+			UpdateTableView.DataSource = _dataTable;
 
 			ProgressBarMain.Maximum = 100;
-			this._sw = new Stopwatch();
+			_sw = new Stopwatch();
 		}
 
 		private void _progressHandler_ProgressChanged(object? sender, UpdateProgressEventArgs e)
 		{
-			var ticks = this._sw.Elapsed;
+			var ticks = _sw.Elapsed;
 
 			if (ticks.Hours > 0)
 				LabelTick.Text = ticks.ToString("hh\\:mm\\:ss");
@@ -82,7 +82,7 @@ namespace GersangLauncher
 					return;
 
 				var fileName = Path.GetFileName(e.PatchInfo.FileName);
-				var rows = this._dataTable.AsEnumerable()
+				var rows = _dataTable.AsEnumerable()
 										  .Where(c =>
 										  {
 											  var field = c.Field<string>("이름");
@@ -93,7 +93,7 @@ namespace GersangLauncher
 				var progress = e.DownloadProgress;
 				if (rows is null || rows.Count == 0)
 				{
-					this._dataTable.Rows.Add(e.PatchInfo.FileName, e.PatchInfo.FilePath, progress);
+					_dataTable.Rows.Add(e.PatchInfo.FileName, e.PatchInfo.FilePath, progress);
 				}
 				else if (rows.Count > 0)
 				{
@@ -111,7 +111,7 @@ namespace GersangLauncher
 			timer.Interval = 500;
 			timer.Tick += (s, e) =>
 			{
-				var ticks = this._sw.Elapsed;
+				var ticks = _sw.Elapsed;
 
 				if (ticks.Hours > 0)
 					LabelTick.Text = ticks.ToString("hh\\:mm\\:ss");
@@ -119,11 +119,11 @@ namespace GersangLauncher
 					LabelTick.Text = ticks.ToString("m\\:ss");
 			};
 
-			this._sw.Start();
+			_sw.Start();
 			timer.Start();
-			var result = await Task.Run(() => this._gameManager.Update(this._installPath, this._serverType, this._progressHandler, this._cts.Token));
+			var result = await Task.Run(() => _gameManager.Update(_installPath, _serverType, _progressHandler, _cts.Token));
 			timer.Stop();
-			this._sw.Stop();
+			_sw.Stop();
 
 			if (result)
 			{
@@ -145,13 +145,13 @@ namespace GersangLauncher
 
 		private async Task UpdatePatchNote()
 		{
-			var patchNote = await this._gameManager.GetPatchNote(this._serverType, this._progressHandler);
-			this.TextBoxPatchNote.Text = string.Join("\r\n", patchNote);
+			var patchNote = await _gameManager.GetPatchNote(_serverType, _progressHandler);
+			TextBoxPatchNote.Text = string.Join("\r\n", patchNote);
 		}
 
 		private void BtnStop_Click(object sender, EventArgs e)
 		{
-			this._cts.Cancel();
+			_cts.Cancel();
 			DialogResult = DialogResult.Cancel;
 		}
 

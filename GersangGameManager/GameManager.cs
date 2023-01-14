@@ -19,10 +19,10 @@ namespace GersangGameManager
 
 		public GameManager(IGameManagerHandler handler)
 		{
-			this._handler = handler;
-			this._patcher = new Patcher();
-			this._runningClientList = new Dictionary<string, bool>();
-			this._patcher.ClearTempDirectory();
+			_handler = handler;
+			_patcher = new Patcher();
+			_runningClientList = new Dictionary<string, bool>();
+			_patcher.ClearTempDirectory();
 		}
 
 		public async Task<LogInResult> LogIn(ClientInfo clientInfo, DecryptDelegate decryptor, bool ignoreAleadyStarted)
@@ -30,8 +30,8 @@ namespace GersangGameManager
 			if (string.IsNullOrEmpty(clientInfo.ID) || string.IsNullOrEmpty(clientInfo.EncryptedPassword))
 				throw new InvalidOperationException("Check ID or Password");
 
-			this._handler.Configure(clientInfo);
-			_ = this._runningClientList.TryGetValue(clientInfo.ID, out bool isStartedClient);
+			_handler.Configure(clientInfo);
+			_ = _runningClientList.TryGetValue(clientInfo.ID, out bool isStartedClient);
 			if (isStartedClient && !ignoreAleadyStarted)
 			{
 				return new LogInResult(LogInResultType.StartedClient);
@@ -45,7 +45,7 @@ namespace GersangGameManager
 			{
 				try
 				{
-					loginResult = await this._handler.LogIn(decryptor);
+					loginResult = await _handler.LogIn(decryptor).ConfigureAwait(false);
 					break;
 				}
 				catch (System.Net.Http.HttpRequestException)
@@ -60,22 +60,22 @@ namespace GersangGameManager
 
 			if (loginResult.Type == LogInResultType.Success)
 			{
-				this._currentLogInAccount = clientInfo.ID;
-				this._runningClientList[this._currentLogInAccount] = false;
+				_currentLogInAccount = clientInfo.ID;
+				_runningClientList[_currentLogInAccount] = false;
 			}
 			else if (loginResult.Type == LogInResultType.RequireOtp)
-				this._currentLogInAccount = clientInfo.ID;
+				_currentLogInAccount = clientInfo.ID;
 
 			return loginResult;
 		}
 
 		public async Task<OtpResult> InputOTP(string otp)
 		{
-			var otpResult = await this._handler.InputOtp(otp);
+			var otpResult = await _handler.InputOtp(otp).ConfigureAwait(false);
 
 			if (otpResult.Type == OtpResultType.Success)
 			{
-				this._runningClientList[this._currentLogInAccount!] = false;
+				_runningClientList[_currentLogInAccount!] = false;
 			}
 
 			return otpResult;
@@ -83,29 +83,27 @@ namespace GersangGameManager
 
 		public async Task<bool> GameStart()
 		{
-			this._isLoginSucceed = await this._handler.CheckLogIn();
-			if (!this._isLoginSucceed)
+			_isLoginSucceed = await _handler.CheckLogIn().ConfigureAwait(false);
+			if (!_isLoginSucceed)
 				return false;
 
-			await this._handler.GameStart();
-			this._runningClientList[this._currentLogInAccount!] = true;
+			await _handler.GameStart().ConfigureAwait(false);
+			_runningClientList[_currentLogInAccount!] = true;
 
-			this._currentLogInAccount = string.Empty;
-			await this._handler.LogOut();
+			_currentLogInAccount = string.Empty;
+			await _handler.LogOut().ConfigureAwait(false);
 			return true;
 		}
 
 		public async Task<bool?> GetSearchReward()
 		{
-			this._isLoginSucceed = await this._handler.CheckLogIn();
+			_isLoginSucceed = await _handler.CheckLogIn().ConfigureAwait(false);
 
-			if (!this._isLoginSucceed)
+			if (!_isLoginSucceed)
 				return null;
 
 			bool ret = false;
-			ret = await this._handler.GetSearchReward();
-
-			return ret;
+			return await _handler.GetSearchReward().ConfigureAwait(false);
 		}
 
 		public void ChangeInstallPath(string newInstallPath)
@@ -122,46 +120,46 @@ namespace GersangGameManager
 				}
 			}
 
-			this._handler.ChangeClientPath(newInstallPath);
+			_handler.ChangeClientPath(newInstallPath);
 		}
 
-		public async Task<int> GetCurrentVersion(ServerType serverType)
+		public Task<int> GetCurrentVersion(ServerType serverType)
 		{
-			return await this._patcher.GetCurrentVersion(serverType);
+			return _patcher.GetCurrentVersionAsync(serverType);
 		}
 
 		public int CheckLocalVersion(string installPath)
 		{
-			return this._patcher.GetLocalVersion(installPath);
+			return _patcher.GetLocalVersion(installPath);
 		}
 
-		public async Task CheckUpdate(string installPath, ServerType serverType)
+		public Task CheckUpdate(string installPath, ServerType serverType)
 		{
-			this._patcher = new Patcher();
-			this._patcher.Configure(installPath, serverType);
-			await this._patcher.CheckNeedToUpdate();
+			_patcher = new Patcher();
+			_patcher.Configure(installPath, serverType);
+			return _patcher.CheckNeedToUpdate();
 		}
 
-		public async Task<string[]> GetPatchNote(ServerType serverType, IProgress<UpdateProgressEventArgs>? progressHandler = null)
+		public Task<string[]> GetPatchNote(ServerType serverType, IProgress<UpdateProgressEventArgs>? progressHandler = null)
 		{
-			this._patcher.Configure(string.Empty, serverType);
-			return await this._patcher.GetPatchNote(progressHandler);
+			_patcher.Configure(string.Empty, serverType);
+			return _patcher.GetPatchNoteAsync(progressHandler);
 		}
 
-		public async Task<bool> Update(string installPath, ServerType serverType, IProgress<UpdateProgressEventArgs>? progressHandler = null, CancellationToken cancellationToken = default)
+		public Task<bool> Update(string installPath, ServerType serverType, IProgress<UpdateProgressEventArgs>? progressHandler = null, CancellationToken cancellationToken = default)
 		{
-			if (this._patcher is null)
+			if (_patcher is null)
 			{
-				this._patcher = new Patcher();
+				_patcher = new Patcher();
 			}
-			this._patcher.BackUpDirectoryName = DateTime.Now.ToString("MM월 dd일 HH시 mm분 ss초");
-			this._patcher.Configure(installPath, serverType);
-			return await this._patcher.Update(progressHandler, cancellationToken);
+			_patcher.BackUpDirectoryName = DateTime.Now.ToString("MM월 dd일 HH시 mm분 ss초");
+			_patcher.Configure(installPath, serverType);
+			return _patcher.Update(progressHandler, cancellationToken);
 		}
 
 		public void ClearTempDirectory()
 		{
-			this._patcher?.ClearTempDirectory();
+			_patcher?.ClearTempDirectory();
 		}
 	}
 }

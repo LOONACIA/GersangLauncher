@@ -10,29 +10,29 @@ namespace GersangLauncher.UserControls
 		private int _index;
 		public int Index
 		{
-			get => this._index;
+			get => _index;
 			set
 			{
-				this._index = value;
-				BtnSave.Text = $"{this._index + 1}번";
+				_index = value;
+				BtnSave.Text = $"{_index + 1}번";
 			}
 		}
 
 		private bool _hideServerPanel;
 		public bool HideServerPanel
 		{
-			get => this._hideServerPanel;
+			get => _hideServerPanel;
 			set
 			{
-				if (this._hideServerPanel == value)
+				if (_hideServerPanel == value)
 					return;
 
-				this._hideServerPanel = value;
+				_hideServerPanel = value;
 				var colBtnFindPath = TablePanelMain.GetColumn(BtnFindGamePath);
 				var colSpanBtnFindPath = TablePanelMain.GetColumnSpan(BtnFindGamePath);
 				var colTBFindPath = TablePanelMain.GetColumn(TextBoxGamePath);
 				var colSpanTBFindPath = TablePanelMain.GetColumnSpan(TextBoxGamePath);
-				if (this._hideServerPanel)
+				if (_hideServerPanel)
 				{
 					RBIsMain.Checked = true;
 					PanelServerType.Visible = false;
