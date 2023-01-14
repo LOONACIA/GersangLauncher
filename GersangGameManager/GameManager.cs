@@ -103,7 +103,7 @@ namespace GersangGameManager
 			
 			if (!_isLoginSucceed)
 				return false;
-
+			
 			await _handler.GameStart().ConfigureAwait(false);
 			_runningClientList[_currentLogInAccount!] = true;
 
