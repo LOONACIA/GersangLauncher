@@ -16,3 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("280343d8-4a35-4faa-8e03-c2aa7e3bb144")]
 
 [assembly: AssemblyVersion("0.6.0")]
+[assembly: AssemblyCopyright("© 2021. LOONACIA All rights reserved.")]

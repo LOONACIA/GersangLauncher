@@ -10,8 +10,6 @@
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>full</DebugType>
-    <PackageLicenseFile>C:\Users\5doll\source\repos\GersangLauncher\GersangLauncher\LICENSE.txt</PackageLicenseFile>
-    <FileVersion></FileVersion>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
 	  
   </PropertyGroup>
